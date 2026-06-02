@@ -1057,42 +1057,52 @@
       </div>
       <div class="contact-form reveal reveal-delay-1">
         <div class="form-title">Start the Conversation</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" placeholder="John" />
+        <form action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="e56db799-132c-4f1a-89c7-a5ff456b2d1b">
+          <input type="hidden" name="subject" value="New Consultation Request - Cirrux Networks">
+          <input type="hidden" name="redirect" value="https://cirruxnet.com/contact.html?success=true">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" name="first_name" placeholder="John" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" name="last_name" placeholder="Smith" required>
+            </div>
           </div>
           <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" placeholder="Smith" />
+            <label>Work Email</label>
+            <input type="email" name="email" placeholder="john@company.com" required>
           </div>
-        </div>
-        <div class="form-group">
-          <label>Work Email</label>
-          <input type="email" placeholder="john@company.com" />
-        </div>
-        <div class="form-group">
-          <label>Company</label>
-          <input type="text" placeholder="Your Company Name" />
-        </div>
-        <div class="form-group">
-          <label>Area of Interest</label>
-          <select>
-            <option value="">Select a solution area…</option>
-            <option>Network & Connectivity</option>
-            <option>Cybersecurity</option>
-            <option>Cloud & Data Center</option>
-            <option>Voice & UCaaS</option>
-            <option>SD-WAN / SASE</option>
-            <option>Telecom Expense Management</option>
-            <option>Multiple / Not Sure</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Message (optional)</label>
-          <textarea placeholder="Tell us a bit about your environment or challenges…"></textarea>
-        </div>
-        <button class="submit-btn" onclick="this.textContent='✓ Message Sent!'; this.style.background='#16a34a';">Schedule My Consultation</button>
+          <div class="form-group">
+            <label>Company</label>
+            <input type="text" name="company" placeholder="Your Company Name">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" name="phone" placeholder="(555) 000-0000">
+          </div>
+          <div class="form-group">
+            <label>Area of Interest</label>
+            <select name="area_of_interest">
+              <option value="">Select a solution area...</option>
+              <option>Network &amp; Connectivity</option>
+              <option>Cybersecurity</option>
+              <option>Cloud &amp; Data Center</option>
+              <option>Voice &amp; UCaaS</option>
+              <option>SD-WAN / SASE</option>
+              <option>Telecom Expense Management</option>
+              <option>Multiple / Not Sure</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea name="message" placeholder="Tell us about your current environment or the challenge you are trying to solve."></textarea>
+          </div>
+          <input type="checkbox" name="botcheck" style="display:none;">
+          <button type="submit" class="submit-btn">Schedule My Consultation</button>
+        </form>
       </div>
     </div>
   </div>
