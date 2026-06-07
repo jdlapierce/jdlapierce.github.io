@@ -50,25 +50,27 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    overflow: visible;
   }
   .nav-inner {
     max-width: 1180px;
     margin: 0 auto;
     padding: 0 28px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     width: 100%;
   }
-  .nav-logo { display: flex; align-items: center; line-height: 1; }
+  /* Left: Cirrux logo */
+  .nav-logo { display: flex; align-items: center; line-height: 1; justify-content: flex-start; }
   .nav-logo img { height: 195px; width: auto; display: block; }
 
-  /* Customer logo in nav */
-  .nav-customer { display: none; align-items: center; gap: 0; }
+  /* Center: customer logo — 75% of Cirrux logo height */
+  .nav-customer { display: none; align-items: center; justify-content: center; line-height: 1; }
   .nav-customer.visible { display: flex; }
-  .nav-divider { width: 1px; height: 48px; background: var(--border); margin: 0 28px; flex-shrink: 0; }
-  .nav-customer img { max-height: 48px; max-width: 180px; width: auto; object-fit: contain; }
+  .nav-customer img { height: 146px; width: auto; display: block; }
 
+  /* Right: label */
   .nav-right {
     display: flex;
     flex-direction: column;
@@ -383,8 +385,7 @@
   @media (max-width: 768px) {
     nav { height: 100px; }
     .nav-logo img { height: 120px; }
-    .nav-customer img { max-height: 36px; max-width: 130px; }
-    .nav-divider { height: 36px; margin: 0 18px; }
+    .nav-customer img { height: 90px; max-width: 180px; }
   }
   @media (max-width: 640px) {
     .page-wrap { padding: 28px 16px 0; }
@@ -398,15 +399,12 @@
 <!-- ── Navigation ── -->
 <nav>
   <div class="nav-inner">
-    <div style="display:flex;align-items:center;">
-      <a href="https://www.cirruxnet.com" class="nav-logo">
-        <img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks">
-      </a>
-      <!-- Customer logo — shown only when ?customerlogo= param present -->
-      <div class="nav-customer" id="nav-customer">
-        <div class="nav-divider"></div>
-        <img src="" alt="Customer" id="nav-customer-img">
-      </div>
+    <a href="https://www.cirruxnet.com" class="nav-logo">
+      <img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks">
+    </a>
+    <!-- Customer logo — centered, shown only when ?customerlogo= param present -->
+    <div class="nav-customer" id="nav-customer">
+      <img src="" alt="Customer" id="nav-customer-img">
     </div>
     <div class="nav-right">
       <span class="nav-site">Service Order Form</span>
@@ -462,7 +460,7 @@
           <input type="text" id="disp-product" readonly tabindex="-1">
         </div>
         <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Router</label>
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Router Included</label>
           <input type="text" id="disp-router" readonly tabindex="-1">
         </div>
         <div class="field locked-field">
