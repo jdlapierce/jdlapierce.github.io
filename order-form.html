@@ -8,1031 +8,211 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0f2040;--blue:#00AEEF;--blue-dk:#0096d6;--ice:#e8f7fd;--white:#fff;--gray:#f4f8fb;--muted:#6b7899;--border:#dde8f0;--text:#1a2340;--shadow:0 4px 24px rgba(0,174,239,0.10);--radius:10px;--display:'Syne',sans-serif;--body:'DM Sans',sans-serif;}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--text);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:80px;}
+  a{text-decoration:none;color:inherit} img{display:block;max-width:100%}
+  nav{background:#fff;border-bottom:1px solid #dde3f0;box-shadow:0 2px 12px rgba(0,0,0,0.08);height:150px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow:visible;}
+  .nav-inner{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr;align-items:center;width:100%;}
+  .nav-logo{display:flex;align-items:center;justify-content:flex-start;}
+  .nav-logo img{height:195px;width:auto;display:block;}
+  .nav-customer{display:none;align-items:center;justify-content:center;}
+  .nav-customer.visible{display:flex;}
+  .nav-customer img{max-height:146px;max-width:260px;width:auto;height:auto;display:block;}
+  .page-hero{background:var(--navy);padding:52px 28px 48px;position:relative;overflow:hidden;}
+  .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 80% 50%,rgba(0,174,239,0.10) 0%,transparent 70%);}
+  .page-hero-inner{max-width:860px;margin:0 auto;position:relative;z-index:1;}
+  .page-hero h1{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;letter-spacing:-0.02em;line-height:1.15;margin-bottom:10px;}
+  .page-hero p{font-size:14px;color:rgba(255,255,255,0.60);max-width:560px;line-height:1.75;}
+  .hero-customer{display:none;margin-bottom:10px;}
+  .hero-customer.visible{display:block;}
+  .hero-customer-badge{display:inline-flex;align-items:center;background:rgba(0,174,239,0.12);border:1px solid rgba(0,174,239,0.25);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:600;color:#7dd4f5;letter-spacing:0.03em;}
+  .page-wrap{max-width:860px;margin:0 auto;padding:40px 28px 0;}
+  .section{margin-bottom:36px;}
+  .section-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid var(--border);}
+  .section-num{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);background:var(--ice);border:1px solid rgba(0,174,239,0.25);padding:3px 10px;border-radius:4px;}
+  .section-title{font-family:var(--display);font-size:15px;font-weight:700;color:var(--navy);letter-spacing:-0.01em;}
+  .grid{display:grid;gap:14px;}
+  .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-4{grid-template-columns:1fr 1fr 1fr 1fr;} .cols-4w{grid-template-columns:2fr 1fr 1fr 1fr;} .cols-addr{grid-template-columns:2fr 1fr 1fr 1fr 1fr;}
+  .col-span-2{grid-column:span 2;} .col-span-3{grid-column:span 3;} .col-span-4{grid-column:span 4;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  label{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);}
+  label .req{color:var(--blue);margin-left:2px;}
+  input[type="text"],input[type="email"],input[type="tel"],select,textarea{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--body);font-size:14px;padding:10px 13px;outline:none;transition:border-color 0.15s,box-shadow 0.15s;-webkit-appearance:none;}
+  input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,174,239,0.12);}
+  input::placeholder,textarea::placeholder{color:#b0bdd4;}
+  select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;}
+  .locked-field input,.locked-field select{background:var(--gray);border-color:var(--border);color:var(--blue-dk);cursor:default;font-weight:500;}
+  .lock-icon{display:inline-flex;align-items:center;color:rgba(0,174,239,0.55);margin-right:4px;}
+  .lock-icon svg{width:9px;height:9px;}
+  .notice{border-radius:8px;padding:11px 15px;font-size:13px;display:flex;align-items:flex-start;gap:9px;margin-bottom:18px;line-height:1.55;}
+  .notice svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;}
+  .notice-blue{background:var(--ice);border:1px solid rgba(0,174,239,0.25);color:#1a7aa8;}
+  .notice-gray{background:var(--gray);border:1px solid var(--border);color:var(--muted);}
+  .contact-card{background:var(--gray);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;transition:box-shadow 0.2s,border-color 0.2s;}
+  .contact-card:focus-within{box-shadow:var(--shadow);border-color:rgba(0,174,239,0.3);}
+  .contact-card .card-label{font-family:var(--display);font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .optional-badge{font-family:var(--body);font-weight:400;font-size:10px;color:var(--muted);border:1px solid var(--border);background:var(--white);padding:1px 8px;border-radius:20px;text-transform:none;letter-spacing:0;}
+  .copy-from-wrap{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+  .copy-from-wrap label{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap;margin:0;}
+  .copy-from-select{flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--body);font-size:13px;padding:6px 28px 6px 10px;outline:none;cursor:pointer;transition:border-color 0.15s;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+  .copy-from-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,174,239,0.12);}
 
-  :root {
-    --navy:    #0a1628;
-    --navy2:   #0f2040;
-    --blue:    #00AEEF;
-    --blue-dk: #0096d6;
-    --ice:     #e8f7fd;
-    --white:   #ffffff;
-    --gray:    #f4f8fb;
-    --muted:   #6b7899;
-    --border:  #dde8f0;
-    --text:    #1a2340;
-    --shadow:  0 4px 24px rgba(0,174,239,0.10);
-    --radius:  10px;
-    --display: 'Syne', sans-serif;
-    --body:    'DM Sans', sans-serif;
-  }
+  /* Site blocks */
+  .site-block{background:var(--white);border:2px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .site-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--border);}
+  .site-block-title{font-family:var(--display);font-size:14px;font-weight:800;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;}
+  .site-subsection{margin-top:20px;padding-top:18px;border-top:1px solid var(--border);}
+  .site-subsection-title{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
 
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: var(--body);
-    color: var(--text);
-    background: var(--white);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    padding-bottom: 80px;
-  }
-  a { text-decoration: none; color: inherit; }
-  img { display: block; max-width: 100%; }
-
-  /* ── Nav ── */
-  nav {
-    background: #ffffff;
-    border-bottom: 1px solid #dde3f0;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    height: 150px;
-    display: flex;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    overflow: visible;
-  }
-  .nav-inner {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 28px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    width: 100%;
-  }
-  /* Left col: Cirrux logo */
-  .nav-logo { display: flex; align-items: center; justify-content: flex-start; }
-  .nav-logo img { height: 195px; width: auto; display: block; }
-
-  /* Center col: customer logo — both max-height AND max-width so
-     wide logos (e.g. 8:1 ratio) scale down instead of blowing out */
-  .nav-customer { display: none; align-items: center; justify-content: center; }
-  .nav-customer.visible { display: flex; }
-  .nav-customer img {
-    max-height: 146px;
-    max-width: 260px;
-    width: auto;
-    height: auto;
-    display: block;
-  }
-
-  /* ── Page hero ── */
-  .page-hero {
-    background: var(--navy);
-    padding: 52px 28px 48px;
-    position: relative;
-    overflow: hidden;
-  }
-  .page-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 50% 80% at 80% 50%, rgba(0,174,239,0.10) 0%, transparent 70%);
-  }
-  .page-hero-inner {
-    max-width: 860px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-  .page-hero h1 {
-    font-family: var(--display);
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    margin-bottom: 10px;
-  }
-  .page-hero p {
-    font-size: 14px;
-    color: rgba(255,255,255,0.60);
-    max-width: 560px;
-    line-height: 1.75;
-    margin-bottom: 0;
-  }
-  /* Customer name in hero */
-  .hero-customer {
-    display: none;
-    margin-bottom: 10px;
-  }
-  .hero-customer.visible { display: block; }
-  .hero-customer-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(0,174,239,0.12);
-    border: 1px solid rgba(0,174,239,0.25);
-    border-radius: 100px;
-    padding: 5px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #7dd4f5;
-    letter-spacing: 0.03em;
-  }
-
-  /* ── Page wrap ── */
-  .page-wrap {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 40px 28px 0;
-  }
-
-  /* ── Section headers ── */
-  .section { margin-bottom: 36px; }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--border);
-  }
-  .section-num {
-    font-family: var(--display);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--blue);
-    background: var(--ice);
-    border: 1px solid rgba(0,174,239,0.25);
-    padding: 3px 10px;
-    border-radius: 4px;
-  }
-  .section-title {
-    font-family: var(--display);
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--navy);
-    letter-spacing: -0.01em;
-  }
-
-  /* ── Grids ── */
-  .grid { display: grid; gap: 14px; }
-  .cols-2    { grid-template-columns: 1fr 1fr; }
-  .cols-3    { grid-template-columns: 1fr 1fr 1fr; }
-  .cols-4    { grid-template-columns: 1fr 1fr 1fr 1fr; }
-  .cols-4w   { grid-template-columns: 2fr 1fr 1fr 1fr; }
-  .cols-addr { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; }
-  .col-span-2 { grid-column: span 2; }
-  .col-span-3 { grid-column: span 3; }
-  .col-span-4 { grid-column: span 4; }
-
-  /* ── Fields ── */
-  .field { display: flex; flex-direction: column; gap: 6px; }
-
-  label {
-    font-family: var(--display);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  label .req { color: var(--blue); margin-left: 2px; }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  select,
-  textarea {
-    width: 100%;
-    background: var(--white);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: var(--body);
-    font-size: 14px;
-    padding: 10px 13px;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    -webkit-appearance: none;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(0,174,239,0.12);
-  }
-  input::placeholder, textarea::placeholder { color: #b0bdd4; }
-
-  select {
-    cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 13px center;
-    padding-right: 34px;
-  }
-
-  /* Locked / pre-filled fields */
-  .locked-field input {
-    background: var(--gray);
-    border-color: var(--border);
-    color: var(--blue-dk);
-    cursor: default;
-    font-weight: 500;
-  }
-  .lock-icon {
-    display: inline-flex;
-    align-items: center;
-    color: rgba(0,174,239,0.55);
-    margin-right: 4px;
-  }
-  .lock-icon svg { width: 9px; height: 9px; }
-
-  /* Notice banners */
-  .notice {
-    border-radius: 8px;
-    padding: 11px 15px;
-    font-size: 13px;
-    display: flex;
-    align-items: flex-start;
-    gap: 9px;
-    margin-bottom: 18px;
-    line-height: 1.55;
-  }
-  .notice svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
-  .notice-blue {
-    background: var(--ice);
-    border: 1px solid rgba(0,174,239,0.25);
-    color: #1a7aa8;
-  }
-  .notice-gray {
-    background: var(--gray);
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
-
-  /* Contact cards */
-  .contact-card {
-    background: var(--gray);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 14px;
-    transition: box-shadow 0.2s, border-color 0.2s;
-  }
-  .contact-card:focus-within {
-    box-shadow: var(--shadow);
-    border-color: rgba(0,174,239,0.3);
-  }
-  .contact-card .card-label {
-    font-family: var(--display);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--navy);
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .optional-badge {
-    font-family: var(--body);
-    font-weight: 400;
-    font-size: 10px;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    background: var(--white);
-    padding: 1px 8px;
-    border-radius: 20px;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-
-  /* ── Router section show/hide ── */
-  .router-section {
-    transition: opacity 0.25s ease, transform 0.25s ease, margin 0.25s ease, padding 0.25s ease, max-height 0.35s ease;
-    max-height: 600px;
-    overflow: hidden;
-  }
-  .router-section.router-hidden {
-    opacity: 0;
-    max-height: 0;
-    margin-bottom: 0 !important;
-    padding-top: 0;
-    padding-bottom: 0;
-    pointer-events: none;
-  }
-
-  /* ── Copy-from dropdown ── */
-  .copy-from-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .copy-from-wrap label {
-    font-family: var(--display);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--muted);
-    white-space: nowrap;
-    margin: 0;
-  }
-  .copy-from-select {
-    flex: 1;
-    background: var(--white);
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: var(--body);
-    font-size: 13px;
-    padding: 6px 28px 6px 10px;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-  }
-  .copy-from-select:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(0,174,239,0.12);
-  }
+  /* Per-site router show/hide */
+  .site-shipto{transition:opacity 0.25s ease,max-height 0.35s ease,margin 0.25s ease;max-height:800px;overflow:hidden;}
+  .site-shipto.hidden{opacity:0;max-height:0;margin-top:0!important;pointer-events:none;}
 
   /* Submit */
-  .submit-wrap {
-    margin-top: 40px;
-    padding-top: 28px;
-    border-top: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  .submit-note {
-    font-size: 13px;
-    color: var(--muted);
-    max-width: 400px;
-    line-height: 1.65;
-  }
-  button[type="submit"] {
-    background: var(--blue);
-    color: #fff;
-    border: none;
-    padding: 13px 36px;
-    border-radius: 8px;
-    font-family: var(--display);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
-    box-shadow: 0 4px 20px rgba(0,174,239,0.38);
-  }
-  button[type="submit"]:hover { background: var(--blue-dk); transform: translateY(-1px); }
-  button[type="submit"]:active { transform: translateY(0); }
-  button[type="submit"]:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .submit-wrap{margin-top:40px;padding-top:28px;border-top:2px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+  .submit-note{font-size:13px;color:var(--muted);max-width:400px;line-height:1.65;}
+  #btn-review{background:var(--blue);color:#fff;border:none;padding:13px 36px;border-radius:8px;font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:0.03em;cursor:pointer;transition:background 0.15s,box-shadow 0.15s,transform 0.1s;box-shadow:0 4px 20px rgba(0,174,239,0.38);}
+  #btn-review:hover{background:var(--blue-dk);transform:translateY(-1px);}
+  #btn-review:active{transform:translateY(0);}
+  #form-result{margin-top:24px;padding:14px 18px;border-radius:8px;font-size:14px;display:none;line-height:1.5;}
+  #form-result.success{background:#edfaf3;border:1.5px solid #7ddaa8;color:#1a6b42;display:block;}
+  #form-result.error{background:#fef2f2;border:1.5px solid #fca5a5;color:#991b1b;display:block;}
+  .field.has-error input,.field.has-error select{border-color:#ef4444!important;}
+  .field-error{font-size:11px;color:#dc2626;font-family:var(--body);display:none;font-weight:500;}
+  .field.has-error .field-error{display:block;}
 
-  /* Result messages */
-  #form-result {
-    margin-top: 24px;
-    padding: 14px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    display: none;
-    line-height: 1.5;
-  }
-  #form-result.success {
-    background: #edfaf3;
-    border: 1.5px solid #7ddaa8;
-    color: #1a6b42;
-    display: block;
-  }
-  #form-result.error {
-    background: #fef2f2;
-    border: 1.5px solid #fca5a5;
-    color: #991b1b;
-    display: block;
-  }
+  /* Confirm overlay */
+  #confirm-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,0.55);z-index:200;overflow-y:auto;padding:40px 16px 60px;}
+  #confirm-overlay.visible{display:block;}
+  #confirm-panel{background:var(--white);border-radius:14px;max-width:860px;margin:0 auto;box-shadow:0 24px 64px rgba(0,0,0,0.25);overflow:hidden;}
+  #confirm-header{background:var(--navy);padding:28px 32px;}
+  #confirm-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  #confirm-title{font-family:var(--display);font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.02em;}
+  #confirm-subtitle{font-size:13px;color:rgba(255,255,255,0.55);margin-top:4px;}
+  #btn-back{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85);padding:9px 20px;border-radius:7px;font-family:var(--display);font-size:13px;font-weight:600;cursor:pointer;transition:background 0.15s;white-space:nowrap;flex-shrink:0;}
+  #btn-back:hover{background:rgba(255,255,255,0.18);}
+  #confirm-body{padding:32px;}
+  .cs-section{margin-bottom:28px;}
+  .cs-section-title{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:2px solid var(--border);}
+  .cs-section-title::before{content:'';width:18px;height:2px;background:var(--blue);border-radius:2px;flex-shrink:0;}
+  .cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px 24px;}
+  .cs-item{display:flex;flex-direction:column;gap:2px;}
+  .cs-label{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+  .cs-value{font-size:14px;color:var(--text);font-weight:500;}
+  .cs-value.empty{color:#b0bdd4;font-style:italic;font-weight:400;}
+  .cs-contacts{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .cs-contact-card{background:var(--gray);border:1.5px solid var(--border);border-radius:8px;padding:14px 16px;}
+  .cs-contact-title{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy);margin-bottom:8px;}
+  .cs-contact-row{font-size:13px;color:var(--text);line-height:1.7;}
+  .cs-contact-row.dim{color:var(--muted);font-size:12px;}
+  .cs-site-block{background:var(--gray);border:1.5px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;}
+  .cs-site-block-title{font-family:var(--display);font-size:13px;font-weight:800;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  #confirm-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:32px;padding-top:24px;border-top:2px solid var(--border);}
+  #btn-edit-confirm{background:var(--gray);border:1.5px solid var(--border);color:var(--muted);padding:12px 24px;border-radius:8px;font-family:var(--display);font-size:13px;font-weight:700;cursor:pointer;transition:background 0.15s,color 0.15s;}
+  #btn-edit-confirm:hover{background:#e4eaf2;color:var(--navy);}
+  #btn-submit-confirm{background:var(--blue);color:#fff;border:none;padding:13px 36px;border-radius:8px;font-family:var(--display);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s,transform 0.1s;box-shadow:0 4px 20px rgba(0,174,239,0.38);}
+  #btn-submit-confirm:hover{background:var(--blue-dk);transform:translateY(-1px);}
+  #btn-submit-confirm:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+  #confirm-result{margin-top:20px;padding:14px 18px;border-radius:8px;font-size:14px;display:none;}
+  #confirm-result.success{background:#edfaf3;border:1.5px solid #7ddaa8;color:#1a6b42;display:block;}
+  #confirm-result.error{background:#fef2f2;border:1.5px solid #fca5a5;color:#991b1b;display:block;}
 
-  /* Validation errors */
-  .field.has-error input,
-  .field.has-error select { border-color: #ef4444 !important; }
-  .field-error {
-    font-size: 11px;
-    color: #dc2626;
-    font-family: var(--body);
-    display: none;
-    font-weight: 500;
-  }
-  .field.has-error .field-error { display: block; }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    nav { height: 100px; }
-    .nav-logo img { height: 120px; }
-    .nav-customer img { max-height: 90px; max-width: 160px; }
-  }
-  @media (max-width: 640px) {
-    .page-wrap { padding: 28px 16px 0; }
-    .cols-2, .cols-3, .cols-4, .cols-4w, .cols-addr { grid-template-columns: 1fr; }
-    .col-span-2, .col-span-3, .col-span-4 { grid-column: span 1; }
-  }
-  #btn-review {
-    background: var(--blue);
-    color: #fff;
-    border: none;
-    padding: 13px 36px;
-    border-radius: 8px;
-    font-family: var(--display);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
-    box-shadow: 0 4px 20px rgba(0,174,239,0.38);
-  }
-  #btn-review:hover { background: var(--blue-dk); transform: translateY(-1px); }
-  #btn-review:active { transform: translateY(0); }
-
-
-  #confirm-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(10,22,40,0.55);
-    z-index: 200;
-    overflow-y: auto;
-    padding: 40px 16px 60px;
-  }
-  #confirm-overlay.visible { display: block; }
-
-  #confirm-panel {
-    background: var(--white);
-    border-radius: 14px;
-    max-width: 860px;
-    margin: 0 auto;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.25);
-    overflow: hidden;
-  }
-
-  #confirm-header {
-    background: var(--navy);
-    padding: 28px 32px;
-  }
-  #confirm-header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
-  #confirm-title {
-    font-family: var(--display);
-    font-size: 20px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
-  #confirm-subtitle {
-    font-size: 13px;
-    color: rgba(255,255,255,0.55);
-    margin-top: 4px;
-  }
-  #btn-back {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.85);
-    padding: 9px 20px;
-    border-radius: 7px;
-    font-family: var(--display);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  #btn-back:hover { background: rgba(255,255,255,0.18); }
-
-  #confirm-body { padding: 32px; }
-
-  /* Summary sections */
-  .cs-section { margin-bottom: 28px; }
-  .cs-section-title {
-    font-family: var(--display);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--border);
-  }
-  .cs-section-title::before {
-    content: '';
-    width: 18px;
-    height: 2px;
-    background: var(--blue);
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  /* Detail rows */
-  .cs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px 24px;
-  }
-  .cs-item { display: flex; flex-direction: column; gap: 2px; }
-  .cs-label {
-    font-family: var(--display);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .cs-value {
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 500;
-  }
-  .cs-value.empty { color: #b0bdd4; font-style: italic; font-weight: 400; }
-
-  /* Contact summary cards */
-  .cs-contacts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 600px) { .cs-contacts { grid-template-columns: 1fr; } }
-  .cs-contact-card {
-    background: var(--gray);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-  }
-  .cs-contact-title {
-    font-family: var(--display);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-  .cs-contact-row {
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.7;
-  }
-  .cs-contact-row .dim { color: var(--muted); font-size: 12px; }
-
-  /* Confirm actions */
-  #confirm-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 2px solid var(--border);
-  }
-  #btn-edit-confirm {
-    background: var(--gray);
-    border: 1.5px solid var(--border);
-    color: var(--muted);
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-family: var(--display);
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-  #btn-edit-confirm:hover { background: #e4eaf2; color: var(--navy); }
-  #btn-submit-confirm {
-    background: var(--blue);
-    color: #fff;
-    border: none;
-    padding: 13px 36px;
-    border-radius: 8px;
-    font-family: var(--display);
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    box-shadow: 0 4px 20px rgba(0,174,239,0.38);
-  }
-  #btn-submit-confirm:hover { background: var(--blue-dk); transform: translateY(-1px); }
-  #btn-submit-confirm:active { transform: translateY(0); }
-  #btn-submit-confirm:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-  #confirm-result {
-    margin-top: 20px;
-    padding: 14px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    display: none;
-  }
-  #confirm-result.success {
-    background: #edfaf3; border: 1.5px solid #7ddaa8; color: #1a6b42; display: block;
-  }
-  #confirm-result.error {
-    background: #fef2f2; border: 1.5px solid #fca5a5; color: #991b1b; display: block;
+  @media(max-width:768px){nav{height:100px;}.nav-logo img{height:120px;}.nav-customer img{max-height:90px;max-width:160px;}}
+  @media(max-width:640px){
+    .page-wrap{padding:28px 16px 0;}
+    .cols-2,.cols-3,.cols-4,.cols-4w,.cols-addr{grid-template-columns:1fr;}
+    .col-span-2,.col-span-3,.col-span-4{grid-column:span 1;}
+    .cs-contacts{grid-template-columns:1fr;}
   }
 </style>
 </head>
 <body>
 
-<!-- ── Navigation ── -->
 <nav>
   <div class="nav-inner">
-    <a href="https://www.cirruxnet.com" class="nav-logo">
-      <img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks">
-    </a>
-    <!-- Customer logo — centered, shown only when ?customerlogo= param present -->
-    <div class="nav-customer" id="nav-customer">
-      <img src="" alt="Customer" id="nav-customer-img">
-    </div>
+    <a href="https://www.cirruxnet.com" class="nav-logo"><img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks"></a>
+    <div class="nav-customer" id="nav-customer"><img src="" alt="Customer" id="nav-customer-img"></div>
   </div>
 </nav>
 
-<!-- ── Hero ── -->
 <div class="page-hero">
   <div class="page-hero-inner">
-    <div class="hero-customer" id="hero-customer">
-      <span class="hero-customer-badge" id="hero-customer-badge"></span>
-    </div>
+    <div class="hero-customer" id="hero-customer"><span class="hero-customer-badge" id="hero-customer-badge"></span></div>
     <h1>Service Order</h1>
     <p>Please complete all required fields below and submit to begin provisioning your service.</p>
   </div>
 </div>
 
-<!-- ── Form body ── -->
 <div class="page-wrap">
   <form id="order-form" novalidate>
-
-    <!-- Hidden fields -->
     <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
-    <input type="hidden" name="Product" id="hf-product">
-    <input type="hidden" name="Router"  id="hf-router">
-    <input type="hidden" name="Speed"   id="hf-speed">
-    <input type="hidden" name="MRC"     id="hf-mrc">
-    <input type="hidden" name="ServiceAddress" id="hf-addr">
-    <input type="hidden" name="ServiceSuite"   id="hf-suite">
-    <input type="hidden" name="ServiceFloor"   id="hf-floor">
-    <input type="hidden" name="ServiceCity"    id="hf-city">
-    <input type="hidden" name="ServiceState"   id="hf-state">
-    <input type="hidden" name="ServiceZIP"     id="hf-zip">
-    <input type="hidden" name="CustomerName"   id="hf-customername">
+    <input type="hidden" name="CustomerName" id="hf-customername">
 
-    <!-- ── 01: ORDER DETAILS ── -->
+    <!-- ── 01: CONTRACT DETAILS ── -->
     <div class="section">
-      <div class="section-header">
-        <span class="section-num">01</span>
-        <span class="section-title">Order Details</span>
-      </div>
-
-      <div class="notice notice-blue">
-        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>
-        Product, router, speed, and MRC were pre-filled from your quote. Contact us if anything looks incorrect.
-      </div>
-
-      <div class="grid cols-4">
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Product</label>
-          <input type="text" id="disp-product" readonly tabindex="-1">
-        </div>
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Router Included</label>
-          <input type="text" id="disp-router" readonly tabindex="-1">
-        </div>
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Speed</label>
-          <input type="text" id="disp-speed" readonly tabindex="-1">
-        </div>
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>MRC</label>
-          <input type="text" id="disp-mrc" readonly tabindex="-1">
-        </div>
-      </div>
-
-      <div style="margin-top:14px;" class="grid cols-4">
-        <div class="field">
-          <label>Handoff (from Ciena)<span class="req">*</span></label>
-          <select name="Handoff" id="handoff" required>
-            <option value="">— Select handoff type —</option>
-            <option value="1000BaseT">1000BaseT</option>
-            <option value="1G Single Mode">1G Single Mode</option>
-            <option value="1G Multimode">1G Multimode</option>
-            <option value="10G Single Mode">10G Single Mode</option>
-            <option value="10G Multimode">10G Multimode</option>
-          </select>
-          <span class="field-error">Please select a handoff type.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 02: CONTRACT DETAILS ── -->
-    <div class="section">
-      <div class="section-header">
-        <span class="section-num">02</span>
-        <span class="section-title">Contract Details</span>
-      </div>
-
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">Contract Details</span></div>
       <div class="notice notice-gray">
         <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>
         Please provide the exact legal name your organization uses for contracts, and the name and title of the individual authorized to sign.
       </div>
-
       <div class="grid cols-4w">
-        <div class="field col-span-2">
-          <label>Official Company Name for Contract<span class="req">*</span></label>
-          <input type="text" name="OfficialCompanyName" id="inp-company" placeholder="Full legal entity name" required>
-          <span class="field-error">Required.</span>
-        </div>
-        <div class="field">
-          <label>Signer Name<span class="req">*</span></label>
-          <input type="text" name="SignerName" id="inp-signer" placeholder="Full name" required>
-          <span class="field-error">Required.</span>
-        </div>
-        <div class="field">
-          <label>Signer Title<span class="req">*</span></label>
-          <input type="text" name="SignerTitle" id="inp-title" placeholder="e.g. VP of IT" required>
-          <span class="field-error">Required.</span>
-        </div>
+        <div class="field col-span-2"><label>Official Company Name for Contract<span class="req">*</span></label><input type="text" name="OfficialCompanyName" id="inp-company" placeholder="Full legal entity name" required><span class="field-error">Required.</span></div>
+        <div class="field"><label>Signer Name<span class="req">*</span></label><input type="text" name="SignerName" id="inp-signer" placeholder="Full name" required><span class="field-error">Required.</span></div>
+        <div class="field"><label>Signer Title<span class="req">*</span></label><input type="text" name="SignerTitle" id="inp-title" placeholder="e.g. VP of IT" required><span class="field-error">Required.</span></div>
       </div>
       <div style="margin-top:14px;" class="grid cols-4w">
-        <div class="field col-span-2">
-          <label>Signer Email<span class="req">*</span></label>
-          <input type="email" name="SignerEmail" id="inp-signer-email" placeholder="signer@company.com" required>
-          <span class="field-error">Required.</span>
-        </div>
-        <div class="field col-span-2">
-          <label>Signer Phone<span class="req">*</span></label>
-          <input type="tel" name="SignerPhone" id="inp-signer-phone" placeholder="555-555-5555" required>
-          <span class="field-error">Required.</span>
-        </div>
+        <div class="field col-span-2"><label>Signer Email<span class="req">*</span></label><input type="email" name="SignerEmail" id="inp-signer-email" placeholder="signer@company.com" required><span class="field-error">Required.</span></div>
+        <div class="field col-span-2"><label>Signer Phone<span class="req">*</span></label><input type="tel" name="SignerPhone" id="inp-signer-phone" placeholder="555-555-5555" required><span class="field-error">Required.</span></div>
       </div>
     </div>
 
-    <!-- ── 03: SERVICE ADDRESS ── -->
+    <!-- ── 02: SHARED CONTACTS ── -->
     <div class="section">
-      <div class="section-header">
-        <span class="section-num">03</span>
-        <span class="section-title">Service Address</span>
-      </div>
-
-      <div class="notice notice-blue">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">Contacts</span></div>
+      <div class="notice notice-gray">
         <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>
-        The service address has been pre-filled. Contact us if it is incorrect.
+        These contacts apply across all sites on this order.
       </div>
-
-      <div class="grid cols-4w" style="margin-bottom:14px;">
-        <div class="field col-span-2">
-          <label>Site Name<span class="req">*</span></label>
-          <input type="text" name="SiteName" id="inp-sitename" placeholder="e.g. Main Data Center" required>
-          <span class="field-error">Required.</span>
-        </div>
-      </div>
-
-      <div class="grid cols-addr">
-        <div class="field locked-field col-span-2">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Street Address</label>
-          <input type="text" id="disp-addr" readonly tabindex="-1">
-        </div>
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Suite</label>
-          <input type="text" id="disp-suite" readonly tabindex="-1">
-        </div>
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Floor</label>
-          <input type="text" id="disp-floor" readonly tabindex="-1">
-        </div>
-      </div>
-      <div style="margin-top:14px;" class="grid cols-3">
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>City</label>
-          <input type="text" id="disp-city" readonly tabindex="-1">
-        </div>
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>State</label>
-          <input type="text" id="disp-state" readonly tabindex="-1">
-        </div>
-        <div class="field locked-field">
-          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>ZIP</label>
-          <input type="text" id="disp-zip" readonly tabindex="-1">
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 04: CONTACTS ── -->
-    <div class="section">
-      <div class="section-header">
-        <span class="section-num">04</span>
-        <span class="section-title">Contacts</span>
-      </div>
-
-      <!-- Main Order Contact -->
       <div class="contact-card">
         <div class="card-label">Main Order Contact</div>
         <div class="grid cols-3">
-          <div class="field">
-            <label>Name<span class="req">*</span></label>
-            <input type="text" name="MainContact_Name" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Email<span class="req">*</span></label>
-            <input type="email" name="MainContact_Email" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="MainContact_Phone" id="main-phone" placeholder="555-555-5555" required>
-            <span class="field-error">Required.</span>
-          </div>
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="MainContact_Name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="MainContact_Email" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Phone<span class="req">*</span></label><input type="tel" name="MainContact_Phone" id="main-phone" placeholder="555-555-5555" required><span class="field-error">Required.</span></div>
         </div>
       </div>
-
-      <!-- Alternate Main Order Contact -->
       <div class="contact-card">
         <div class="card-label">Alternate Order Contact</div>
         <div class="grid cols-3">
-          <div class="field">
-            <label>Name<span class="req">*</span></label>
-            <input type="text" name="AltContact_Name" data-contact="alt-main" data-field="name" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Email<span class="req">*</span></label>
-            <input type="email" name="AltContact_Email" data-contact="alt-main" data-field="email" required>
-            <span class="field-error">Required.</span>
-          </div>
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="AltContact_Name" data-contact="alt-main" data-field="name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="AltContact_Email" data-contact="alt-main" data-field="email" required><span class="field-error">Required.</span></div>
           <div class="field" id="field-alt-main-phone">
             <label>Phone<span class="req">*</span> <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from Main)</span></label>
             <input type="tel" name="AltContact_Phone" id="alt-main-phone" data-contact="alt-main" data-field="phone" placeholder="555-555-5555" required>
-            <span class="field-error">Must be different from the Main Order Contact phone.</span>
+            <span class="field-error">Must be different from Main Order Contact phone.</span>
           </div>
         </div>
       </div>
-
-      <!-- Location Contact (LCON) -->
-      <div class="contact-card">
-        <div class="card-label">Location Contact (LCON)</div>
-        <div class="copy-from-wrap">
-          <label>Copy from</label>
-          <select class="copy-from-select" onchange="copyContact(this,'lcon')">
-            <option value="">— select a contact to copy —</option>
-          </select>
-        </div>
-        <div class="grid cols-3">
-          <div class="field">
-            <label>Name<span class="req">*</span></label>
-            <input type="text" name="LCON_Name" data-contact="lcon" data-field="name" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Email<span class="req">*</span></label>
-            <input type="email" name="LCON_Email" data-contact="lcon" data-field="email" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="LCON_Phone" id="lcon-phone" data-contact="lcon" data-field="phone" placeholder="555-555-5555" required>
-            <span class="field-error">Required.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alternate LCON -->
-      <div class="contact-card">
-        <div class="card-label">Alternate Location Contact</div>
-        <div class="copy-from-wrap">
-          <label>Copy from</label>
-          <select class="copy-from-select" data-exclude="lcon" onchange="copyContact(this,'alt-lcon')">
-            <option value="">— select a contact to copy —</option>
-          </select>
-        </div>
-        <div class="grid cols-3">
-          <div class="field">
-            <label>Name<span class="req">*</span></label>
-            <input type="text" name="AltLCON_Name" data-contact="alt-lcon" data-field="name" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Email<span class="req">*</span></label>
-            <input type="email" name="AltLCON_Email" data-contact="alt-lcon" data-field="email" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field" id="field-alt-lcon-phone">
-            <label>Phone<span class="req">*</span> <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from LCON)</span></label>
-            <input type="tel" name="AltLCON_Phone" id="alt-lcon-phone" data-contact="alt-lcon" data-field="phone" placeholder="555-555-5555" required>
-            <span class="field-error">Must be different from the Location Contact phone.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Technical Contact -->
       <div class="contact-card">
         <div class="card-label">Technical Contact</div>
-        <div class="copy-from-wrap">
-          <label>Copy from</label>
-          <select class="copy-from-select" onchange="copyContact(this,'tech')">
-            <option value="">— select a contact to copy —</option>
-          </select>
-        </div>
+        <div class="copy-from-wrap"><label>Copy from</label><select class="copy-from-select" onchange="copyContact(this,'tech')"><option value="">— select a contact to copy —</option></select></div>
         <div class="grid cols-3">
-          <div class="field">
-            <label>Name<span class="req">*</span></label>
-            <input type="text" name="Tech_Name" data-contact="tech" data-field="name" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Email<span class="req">*</span></label>
-            <input type="email" name="Tech_Email" data-contact="tech" data-field="email" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="Tech_Phone" data-contact="tech" data-field="phone" placeholder="555-555-5555" required>
-            <span class="field-error">Required.</span>
-          </div>
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Tech_Name" data-contact="tech" data-field="name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Tech_Email" data-contact="tech" data-field="email" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Phone<span class="req">*</span></label><input type="tel" name="Tech_Phone" data-contact="tech" data-field="phone" placeholder="555-555-5555" required><span class="field-error">Required.</span></div>
         </div>
       </div>
-
-      <!-- Router Ship-to Contact -->
-      <div class="contact-card router-section" id="shipto-contact-card">
-        <div class="card-label">Router Ship-to Contact</div>
-        <div class="copy-from-wrap">
-          <label>Copy from</label>
-          <select class="copy-from-select" onchange="copyContact(this,'shipto')">
-            <option value="">— select a contact to copy —</option>
-          </select>
-        </div>
-        <div class="grid cols-3">
-          <div class="field">
-            <label>Name<span class="req">*</span></label>
-            <input type="text" name="ShipTo_Name" data-contact="shipto" data-field="name" data-router-required required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Email<span class="req">*</span></label>
-            <input type="email" name="ShipTo_Email" data-contact="shipto" data-field="email" data-router-required required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="ShipTo_Phone" data-contact="shipto" data-field="phone" data-router-required placeholder="555-555-5555" required>
-            <span class="field-error">Required.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Router Ship-to Address -->
-      <div class="contact-card router-section" id="shipto-address-card">
-        <div class="card-label">Router Ship-to Address <span class="optional-badge">if different from service address</span></div>
-        <div class="grid cols-addr">
-          <div class="field col-span-2"><label>Address Line 1</label><input type="text" name="ShipTo_Addr1"></div>
-          <div class="field"><label>Address Line 2</label><input type="text" name="ShipTo_Addr2"></div>
-        </div>
-        <div style="margin-top:14px;" class="grid cols-3">
-          <div class="field"><label>City</label><input type="text" name="ShipTo_City"></div>
-          <div class="field"><label>State</label><input type="text" name="ShipTo_State" placeholder="TX" maxlength="2"></div>
-          <div class="field"><label>ZIP</label><input type="text" name="ShipTo_ZIP" placeholder="77479"></div>
-        </div>
-      </div>
-
-      <!-- Billing Contact -->
       <div class="contact-card">
         <div class="card-label">Billing Contact</div>
-        <div class="copy-from-wrap">
-          <label>Copy from</label>
-          <select class="copy-from-select" onchange="copyContact(this,'billing')">
-            <option value="">— select a contact to copy —</option>
-          </select>
-        </div>
+        <div class="copy-from-wrap"><label>Copy from</label><select class="copy-from-select" onchange="copyContact(this,'billing')"><option value="">— select a contact to copy —</option></select></div>
         <div class="grid cols-3">
-          <div class="field">
-            <label>Name<span class="req">*</span></label>
-            <input type="text" name="Billing_Name" data-contact="billing" data-field="name" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Email<span class="req">*</span></label>
-            <input type="email" name="Billing_Email" data-contact="billing" data-field="email" required>
-            <span class="field-error">Required.</span>
-          </div>
-          <div class="field">
-            <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="Billing_Phone" data-contact="billing" data-field="phone" placeholder="555-555-5555" required>
-            <span class="field-error">Required.</span>
-          </div>
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Billing_Name" data-contact="billing" data-field="name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Billing_Email" data-contact="billing" data-field="email" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Phone<span class="req">*</span></label><input type="tel" name="Billing_Phone" data-contact="billing" data-field="phone" placeholder="555-555-5555" required><span class="field-error">Required.</span></div>
         </div>
       </div>
-
-      <!-- Billing Address -->
       <div class="contact-card">
         <div class="card-label">Billing Address <span class="optional-badge">if different from service address</span></div>
         <div class="grid cols-addr">
@@ -1045,28 +225,32 @@
           <div class="field"><label>ZIP</label><input type="text" name="Billing_ZIP" placeholder="77479"></div>
         </div>
       </div>
+    </div>
 
-    </div><!-- /contacts -->
+    <!-- ── 03: SITES ── -->
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">Service Sites &amp; Order Details</span></div>
+      <div class="notice notice-blue">
+        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>
+        Each site has its own order details, service address, and location contacts. Pre-filled fields are locked from your quote — contact us if anything looks incorrect.
+      </div>
+      <div id="sites-container"></div>
+    </div>
 
     <div class="submit-wrap">
       <p class="submit-note">Please review your information on the next screen before submitting.</p>
       <button type="button" id="btn-review">Review Order →</button>
     </div>
-
     <div id="form-result"></div>
-
   </form>
-</div><!-- /page-wrap -->
+</div>
 
-<!-- ── Confirmation overlay ── -->
+<!-- Confirm overlay -->
 <div id="confirm-overlay">
   <div id="confirm-panel">
     <div id="confirm-header">
       <div id="confirm-header-inner">
-        <div>
-          <div id="confirm-title">Review Your Order</div>
-          <div id="confirm-subtitle">Please verify everything below before submitting.</div>
-        </div>
+        <div><div id="confirm-title">Review Your Order</div><div id="confirm-subtitle">Please verify everything below before submitting.</div></div>
         <button id="btn-back" onclick="hideConfirm()">← Edit</button>
       </div>
     </div>
@@ -1082,396 +266,441 @@
 </div>
 
 <script>
-function normalizePhone(v) { return v.replace(/\D/g,''); }
-function phonesMatch(a,b) {
-  const na = normalizePhone(a), nb = normalizePhone(b);
-  return na.length >= 7 && nb.length >= 7 && na === nb;
-}
+function norm(v){return v.replace(/\D/g,'');}
+function phonesMatch(a,b){const na=norm(a),nb=norm(b);return na.length>=7&&nb.length>=7&&na===nb;}
+function gv(sel){const e=document.querySelector(sel);return e?e.value.trim():'';}
+function gi(id){const e=document.getElementById(id);return e?e.value.trim():'';}
 
-const params = new URLSearchParams(window.location.search);
+const params=new URLSearchParams(window.location.search);
+const editableMap={company:'inp-company',signer:'inp-signer',title:'inp-title',signeremail:'inp-signer-email',signerphone:'inp-signer-phone'};
 
-const lockedMap = {
-  product: ['disp-product','hf-product'],
-  router:  ['disp-router', 'hf-router' ],
-  speed:   ['disp-speed',  'hf-speed'  ],
-  mrc:     ['disp-mrc',    'hf-mrc'    ],
-  addr:    ['disp-addr',   'hf-addr'   ],
-  suite:   ['disp-suite',  'hf-suite'  ],
-  floor:   ['disp-floor',  'hf-floor'  ],
-  city:    ['disp-city',   'hf-city'   ],
-  state:   ['disp-state',  'hf-state'  ],
-  zip:     ['disp-zip',    'hf-zip'    ],
-};
-
-const editableMap = {
-  sitename:    'inp-sitename',
-  company:     'inp-company',
-  signer:      'inp-signer',
-  title:       'inp-title',
-  signeremail: 'inp-signer-email',
-  signerphone: 'inp-signer-phone',
-};
-
-function applyParams() {
-  for (const [key,[dispId,hiddenId]] of Object.entries(lockedMap)) {
-    const val = params.get(key) || '';
-    const d = document.getElementById(dispId);
-    const h = document.getElementById(hiddenId);
-    if (d) d.value = val || '—';
-    if (h) h.value = val;
+function applyParams(){
+  for(const [key,elId] of Object.entries(editableMap)){
+    const val=params.get(key)||'';const el=document.getElementById(elId);
+    if(el&&val) el.value=val;
   }
-  for (const [key,elId] of Object.entries(editableMap)) {
-    const val = params.get(key) || '';
-    const el = document.getElementById(elId);
-    if (el && val) el.value = val;
+  const logoFile=params.get('customerlogo')||'',customerName=params.get('customername')||'';
+  if(logoFile){
+    const src=logoFile.startsWith('http')?logoFile:'/logos/'+logoFile;
+    const wrap=document.getElementById('nav-customer'),img=document.getElementById('nav-customer-img');
+    img.src=src;img.alt=customerName||'Customer';wrap.classList.add('visible');
   }
-  const logoFile     = params.get('customerlogo') || '';
-  const customerName = params.get('customername') || '';
-  if (logoFile) {
-    const src = logoFile.startsWith('http') ? logoFile : '/logos/' + logoFile;
-    const navWrap = document.getElementById('nav-customer');
-    const navImg  = document.getElementById('nav-customer-img');
-    navImg.src = src; navImg.alt = customerName || 'Customer';
-    navWrap.classList.add('visible');
-  }
-  if (customerName) {
-    const hf = document.getElementById('hf-customername');
-    if (hf) hf.value = customerName;
-    const badge = document.getElementById('hero-customer-badge');
-    const wrap  = document.getElementById('hero-customer');
-    if (badge && wrap) { badge.textContent = 'Prepared for ' + customerName; wrap.classList.add('visible'); }
+  if(customerName){
+    const hf=document.getElementById('hf-customername');if(hf)hf.value=customerName;
+    const badge=document.getElementById('hero-customer-badge'),wrap=document.getElementById('hero-customer');
+    if(badge&&wrap){badge.textContent='Prepared for '+customerName;wrap.classList.add('visible');}
   }
 }
 applyParams();
 
-// ── Router show/hide ──
-function updateRouterSections() {
-  const routerVal = document.getElementById('hf-router').value.trim().toLowerCase();
-  const isNo = routerVal === 'no';
-  document.querySelectorAll('.router-section').forEach(el => el.classList.toggle('router-hidden', isNo));
-  document.querySelectorAll('[data-router-required]').forEach(el => { el.required = !isNo; });
-}
-updateRouterSections();
+// ── Site management ──
+let siteCount=0;
 
-// ── Copy-from system ──
-const CONTACTS = [
-  { key: 'main',     label: 'Main Order Contact',         nameField: '[name="MainContact_Name"]',  emailField: '[name="MainContact_Email"]',  phoneField: '#main-phone' },
-  { key: 'alt-main', label: 'Alternate Order Contact',    nameField: '[data-contact="alt-main"][data-field="name"]', emailField: '[data-contact="alt-main"][data-field="email"]', phoneField: '[data-contact="alt-main"][data-field="phone"]' },
-  { key: 'lcon',     label: 'Location Contact (LCON)',    nameField: '[data-contact="lcon"][data-field="name"]',     emailField: '[data-contact="lcon"][data-field="email"]',     phoneField: '#lcon-phone' },
-  { key: 'alt-lcon', label: 'Alternate Location Contact', nameField: '[data-contact="alt-lcon"][data-field="name"]', emailField: '[data-contact="alt-lcon"][data-field="email"]', phoneField: '[data-contact="alt-lcon"][data-field="phone"]' },
-  { key: 'tech',     label: 'Technical Contact',          nameField: '[data-contact="tech"][data-field="name"]',     emailField: '[data-contact="tech"][data-field="email"]',     phoneField: '[data-contact="tech"][data-field="phone"]' },
-  { key: 'shipto',   label: 'Router Ship-to Contact',     nameField: '[data-contact="shipto"][data-field="name"]',   emailField: '[data-contact="shipto"][data-field="email"]',   phoneField: '[data-contact="shipto"][data-field="phone"]' },
-  { key: 'billing',  label: 'Billing Contact',            nameField: '[data-contact="billing"][data-field="name"]',  emailField: '[data-contact="billing"][data-field="email"]',  phoneField: '[data-contact="billing"][data-field="phone"]' },
-];
-
-function getContactData(key) {
-  const def = CONTACTS.find(c => c.key === key);
-  if (!def) return null;
-  const nameEl  = document.querySelector(def.nameField);
-  const emailEl = document.querySelector(def.emailField);
-  const phoneEl = document.querySelector(def.phoneField);
-  return {
-    name:  nameEl  ? nameEl.value.trim()  : '',
-    email: emailEl ? emailEl.value.trim() : '',
-    phone: phoneEl ? phoneEl.value.trim() : '',
-  };
-}
-
-function refreshCopyDropdowns() {
-  document.querySelectorAll('.copy-from-select').forEach(select => {
-    const targetKey  = select.getAttribute('onchange').match(/'([^']+)'\)/)[1];
-    const targetIdx  = CONTACTS.findIndex(c => c.key === targetKey);
-    const excludeKey = select.dataset.exclude || null;
-    const currentVal = select.value;
-    select.innerHTML = '<option value="">— select a contact to copy —</option>';
-    for (let i = 0; i < targetIdx; i++) {
-      const c = CONTACTS[i];
-      if (c.key === excludeKey) continue;
-      const data = getContactData(c.key);
-      if (data && data.name) {
-        const opt = document.createElement('option');
-        opt.value = c.key;
-        opt.textContent = c.label + ' (' + data.name + ')';
-        select.appendChild(opt);
-      }
-    }
-    if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) select.value = currentVal;
-  });
-}
-
-function copyContact(selectEl, targetKey) {
-  const sourceKey = selectEl.value;
-  if (!sourceKey) return;
-  const sourceData = getContactData(sourceKey);
-  if (!sourceData) return;
-  const targetDef = CONTACTS.find(c => c.key === targetKey);
-  if (!targetDef) return;
-  const nameEl  = document.querySelector(targetDef.nameField);
-  const emailEl = document.querySelector(targetDef.emailField);
-  const phoneEl = document.querySelector(targetDef.phoneField);
-  if (nameEl)  { nameEl.value  = sourceData.name;  nameEl.dispatchEvent(new Event('input'));  }
-  if (emailEl) { emailEl.value = sourceData.email; emailEl.dispatchEvent(new Event('input')); }
-  if (phoneEl) { phoneEl.value = sourceData.phone; phoneEl.dispatchEvent(new Event('input')); }
-  selectEl.value = '';
-  checkAltMainPhone(); checkAltLconPhone();
-}
-
-CONTACTS.forEach(c => {
-  [c.nameField, c.emailField, c.phoneField].forEach(selector => {
-    const el = document.querySelector(selector);
-    if (el) el.addEventListener('input', refreshCopyDropdowns);
-  });
-});
-refreshCopyDropdowns();
-
-// ── Duplicate phone checks ──
-function checkAltMainPhone() {
-  const field = document.getElementById('field-alt-main-phone');
-  const alt   = document.getElementById('alt-main-phone').value;
-  const main  = document.getElementById('main-phone').value;
-  if (alt && phonesMatch(alt, main)) { field.classList.add('has-error'); return false; }
-  field.classList.remove('has-error'); return true;
-}
-function checkAltLconPhone() {
-  const field = document.getElementById('field-alt-lcon-phone');
-  const alt   = document.getElementById('alt-lcon-phone').value;
-  const lcon  = document.getElementById('lcon-phone').value;
-  if (alt && phonesMatch(alt, lcon)) { field.classList.add('has-error'); return false; }
-  field.classList.remove('has-error'); return true;
-}
-['alt-main-phone','main-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltMainPhone));
-['alt-lcon-phone','lcon-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltLconPhone));
-
-// ── Required validation ──
-function validateRequired() {
-  let valid = true;
-  document.querySelectorAll('[required]').forEach(el => {
-    const field = el.closest('.field');
-    if (!el.value.trim()) { field && field.classList.add('has-error'); valid = false; }
-    else                   { field && field.classList.remove('has-error'); }
-  });
-  return valid;
-}
-document.querySelectorAll('[required]').forEach(el => {
-  ['input','change'].forEach(evt => el.addEventListener(evt, () => {
-    const field = el.closest('.field');
-    if (el.value.trim()) field && field.classList.remove('has-error');
-  }));
-});
-
-// ── Helpers ──
-function v(selector) {
-  const el = document.querySelector(selector);
-  return el ? el.value.trim() : '';
-}
-function fv(id) {
-  const el = document.getElementById(id);
-  return el ? el.value.trim() : '';
-}
-
-// ── Build confirmation summary ──
-function buildSummary() {
-  const routerNo = fv('hf-router').toLowerCase() === 'no';
-
-  // Helper to create a summary section
-  function section(title, rows) {
-    const items = rows.filter(r => r).map(([label, val]) => {
-      const empty = !val;
-      return `<div class="cs-item">
-        <div class="cs-label">${label}</div>
-        <div class="cs-value${empty ? ' empty' : ''}">${val || '—'}</div>
-      </div>`;
-    }).join('');
-    return `<div class="cs-section">
-      <div class="cs-section-title">${title}</div>
-      <div class="cs-grid">${items}</div>
-    </div>`;
+function getSiteParams(){
+  const sites=[];
+  let i=1;
+  while(params.get(`site${i}_addr`)||params.get(`site${i}_city`)||params.get(`site${i}_product`)){
+    sites.push({
+      name:params.get(`site${i}_name`)||'',addr:params.get(`site${i}_addr`)||'',suite:params.get(`site${i}_suite`)||'',
+      floor:params.get(`site${i}_floor`)||'',city:params.get(`site${i}_city`)||'',state:params.get(`site${i}_state`)||'',
+      zip:params.get(`site${i}_zip`)||'',product:params.get(`site${i}_product`)||'',router:params.get(`site${i}_router`)||'',
+      speed:params.get(`site${i}_speed`)||'',mrc:params.get(`site${i}_mrc`)||'',
+    });
+    i++;
   }
-
-  // Helper to build a contact card for the summary
-  function contactCard(title, name, email, phone) {
-    return `<div class="cs-contact-card">
-      <div class="cs-contact-title">${title}</div>
-      <div class="cs-contact-row"><strong>${name || '—'}</strong></div>
-      <div class="cs-contact-row dim">${email || '—'}</div>
-      <div class="cs-contact-row dim">${phone || '—'}</div>
-    </div>`;
+  if(sites.length===0&&(params.get('addr')||params.get('city')||params.get('product'))){
+    sites.push({name:params.get('sitename')||'',addr:params.get('addr')||'',suite:params.get('suite')||'',floor:params.get('floor')||'',city:params.get('city')||'',state:params.get('state')||'',zip:params.get('zip')||'',product:params.get('product')||'',router:params.get('router')||'',speed:params.get('speed')||'',mrc:params.get('mrc')||''});
   }
+  if(sites.length===0) sites.push({name:'',addr:'',suite:'',floor:'',city:'',state:'',zip:'',product:'',router:'',speed:'',mrc:''});
+  return sites;
+}
 
-  // Address parts
-  const addrParts = [
-    fv('hf-addr'),
-    [fv('hf-suite') ? 'Ste ' + fv('hf-suite') : '', fv('hf-floor') ? 'Fl ' + fv('hf-floor') : ''].filter(Boolean).join(', '),
-    [fv('hf-city'), fv('hf-state'), fv('hf-zip')].filter(Boolean).join(', ')
-  ].filter(Boolean).join('<br>');
+const LK=`<svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>`;
+const ISVG=`<svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>`;
 
-  // Ship-to address
-  const shipAddrParts = [
-    v('[name="ShipTo_Addr1"]'),
-    v('[name="ShipTo_Addr2"]'),
-    [v('[name="ShipTo_City"]'), v('[name="ShipTo_State"]'), v('[name="ShipTo_ZIP"]')].filter(Boolean).join(', ')
-  ].filter(Boolean).join('<br>');
+function buildSiteBlock(idx,sd){
+  const n=idx+1;
+  const aLk=!!(sd.addr||sd.city), oLk=!!(sd.product||sd.router||sd.speed||sd.mrc);
+  const lk=`<span class="lock-icon">${LK}</span>`;
+  const aCls=aLk?'field locked-field':'field', oCls=oLk?'field locked-field':'field';
 
-  // Billing address
-  const billAddrParts = [
-    v('[name="Billing_Addr1"]'),
-    v('[name="Billing_Addr2"]'),
-    [v('[name="Billing_City"]'), v('[name="Billing_State"]'), v('[name="Billing_ZIP"]')].filter(Boolean).join(', ')
-  ].filter(Boolean).join('<br>');
+  const addrF=aLk?`<input type="text" id="site${n}-disp-addr" value="${sd.addr||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Address" value="${sd.addr||''}">`:`<input type="text" name="Site${n}_Address" placeholder="123 Main St" required><span class="field-error">Required.</span>`;
+  const suiteF=aLk?`<input type="text" id="site${n}-disp-suite" value="${sd.suite||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Suite" value="${sd.suite||''}">`:`<input type="text" name="Site${n}_Suite" placeholder="Ste 400">`;
+  const floorF=aLk?`<input type="text" id="site${n}-disp-floor" value="${sd.floor||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Floor" value="${sd.floor||''}">`:`<input type="text" name="Site${n}_Floor" placeholder="3">`;
+  const cityF=aLk?`<input type="text" id="site${n}-disp-city" value="${sd.city||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_City" value="${sd.city||''}">`:`<input type="text" name="Site${n}_City" required><span class="field-error">Required.</span>`;
+  const stateF=aLk?`<input type="text" id="site${n}-disp-state" value="${sd.state||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_State" value="${sd.state||''}">`:`<input type="text" name="Site${n}_State" placeholder="TX" maxlength="2" required><span class="field-error">Required.</span>`;
+  const zipF=aLk?`<input type="text" id="site${n}-disp-zip" value="${sd.zip||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_ZIP" value="${sd.zip||''}">`:`<input type="text" name="Site${n}_ZIP" placeholder="77479" required><span class="field-error">Required.</span>`;
 
-  let html = '';
+  const productF=oLk?`<input type="text" id="site${n}-disp-product" value="${sd.product||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Product" id="site${n}-hf-product" value="${sd.product||''}">`:`<select name="Site${n}_Product" id="site${n}-hf-product" required><option value="">— Select —</option><option value="DIA">DIA</option><option value="MPLS">MPLS</option><option value="Ethernet">Ethernet</option><option value="SD-WAN">SD-WAN</option><option value="Broadband">Broadband</option><option value="Point-to-Point">Point-to-Point</option></select><span class="field-error">Required.</span>`;
+  const routerF=oLk?`<input type="text" id="site${n}-disp-router" value="${sd.router||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Router" id="site${n}-hf-router" value="${sd.router||''}">`:`<select name="Site${n}_Router" id="site${n}-hf-router" onchange="updateSiteShipTo(${n})" required><option value="">— Select —</option><option value="Yes">Yes</option><option value="No">No</option></select><span class="field-error">Required.</span>`;
+  const speedF=oLk?`<input type="text" id="site${n}-disp-speed" value="${sd.speed||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Speed" value="${sd.speed||''}">`:`<input type="text" name="Site${n}_Speed" placeholder="e.g. 1Gbps" required><span class="field-error">Required.</span>`;
+  const mrcF=oLk?`<input type="text" id="site${n}-disp-mrc" value="${sd.mrc?'$'+sd.mrc:'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_MRC" value="${sd.mrc||''}">`:`<input type="text" name="Site${n}_MRC" placeholder="e.g. 1,500" required><span class="field-error">Required.</span>`;
 
-  // 01 Order details
-  html += section('Order Details', [
-    ['Product',         fv('hf-product')],
-    ['Router Included', fv('hf-router')],
-    ['Speed',           fv('hf-speed')],
-    ['MRC',             fv('hf-mrc') ? '$' + fv('hf-mrc') : ''],
-    ['Handoff',         v('#handoff')],
-  ]);
+  // Determine initial router value for show/hide
+  const routerIsYes = (sd.router||'').toLowerCase()==='yes';
+  const routerIsNo  = (sd.router||'').toLowerCase()==='no';
+  const shiptoHidden = routerIsNo ? 'hidden' : '';
 
-  // 02 Contract details
-  html += section('Contract Details', [
-    ['Official Company Name', v('[name="OfficialCompanyName"]')],
-    ['Signer Name',           v('[name="SignerName"]')],
-    ['Signer Title',          v('[name="SignerTitle"]')],
-    ['Signer Email',          v('[name="SignerEmail"]')],
-    ['Signer Phone',          v('[name="SignerPhone"]')],
-  ]);
+  return `
+  <div class="site-block" id="site-block-${n}" data-site="${n}">
+    <div class="site-block-header"><div class="site-block-title">Site ${n}</div></div>
 
-  // 03 Service address
-  html += `<div class="cs-section">
-    <div class="cs-section-title">Service Address</div>
-    <div class="cs-grid">
-      <div class="cs-item" style="grid-column:span 2;">
-        <div class="cs-label">Site Name</div>
-        <div class="cs-value">${v('[name="SiteName"]') || '—'}</div>
+    <!-- Order Details -->
+    <div class="site-subsection" style="margin-top:0;padding-top:0;border-top:none;">
+      <div class="site-subsection-title">Order Details</div>
+      ${oLk?`<div class="notice notice-blue" style="margin-bottom:14px;">${ISVG}Order details pre-filled from your quote. Contact us if anything looks incorrect.</div>`:''}
+      <div class="grid cols-4">
+        <div class="${oCls}"><label>${oLk?lk:''}Product${oLk?'':'<span class="req">*</span>'}</label>${productF}</div>
+        <div class="${oCls}"><label>${oLk?lk:''}Router Included${oLk?'':'<span class="req">*</span>'}</label>${routerF}</div>
+        <div class="${oCls}"><label>${oLk?lk:''}Speed${oLk?'':'<span class="req">*</span>'}</label>${speedF}</div>
+        <div class="${oCls}"><label>${oLk?lk:''}MRC${oLk?'':'<span class="req">*</span>'}</label>${mrcF}</div>
       </div>
-      <div class="cs-item" style="grid-column:span 2;">
-        <div class="cs-label">Address</div>
-        <div class="cs-value">${addrParts || '—'}</div>
+      <div style="margin-top:14px;" class="grid cols-4">
+        <div class="field">
+          <label>Handoff (from Ciena)<span class="req">*</span></label>
+          <select name="Site${n}_Handoff" required>
+            <option value="">— Select handoff type —</option>
+            <option value="1000BaseT">1000BaseT</option><option value="1G Single Mode">1G Single Mode</option>
+            <option value="1G Multimode">1G Multimode</option><option value="10G Single Mode">10G Single Mode</option>
+            <option value="10G Multimode">10G Multimode</option>
+          </select>
+          <span class="field-error">Please select a handoff type.</span>
+        </div>
       </div>
     </div>
-  </div>`;
 
-  // 04 Contacts
-  const contactsHtml = [
-    contactCard('Main Order Contact',
-      v('[name="MainContact_Name"]'), v('[name="MainContact_Email"]'), fv('main-phone')),
-    contactCard('Alternate Order Contact',
-      v('[name="AltContact_Name"]'), v('[name="AltContact_Email"]'), fv('alt-main-phone')),
-    contactCard('Location Contact (LCON)',
-      v('[data-contact="lcon"][data-field="name"]'), v('[data-contact="lcon"][data-field="email"]'), fv('lcon-phone')),
-    contactCard('Alternate Location Contact',
-      v('[data-contact="alt-lcon"][data-field="name"]'), v('[data-contact="alt-lcon"][data-field="email"]'), fv('alt-lcon-phone')),
-    contactCard('Technical Contact',
-      v('[data-contact="tech"][data-field="name"]'), v('[data-contact="tech"][data-field="email"]'), v('[data-contact="tech"][data-field="phone"]')),
-    !routerNo ? contactCard('Router Ship-to Contact',
-      v('[data-contact="shipto"][data-field="name"]'), v('[data-contact="shipto"][data-field="email"]'), v('[data-contact="shipto"][data-field="phone"]')) : '',
-    contactCard('Billing Contact',
-      v('[data-contact="billing"][data-field="name"]'), v('[data-contact="billing"][data-field="email"]'), v('[data-contact="billing"][data-field="phone"]')),
-  ].join('');
+    <!-- Service Address -->
+    <div class="site-subsection">
+      <div class="site-subsection-title">Service Address</div>
+      <div class="grid cols-4w" style="margin-bottom:14px;">
+        <div class="field col-span-2"><label>Site Name<span class="req">*</span></label><input type="text" name="Site${n}_Name" value="${sd.name||''}" placeholder="e.g. Main Data Center" required><span class="field-error">Required.</span></div>
+      </div>
+      <div class="grid cols-addr">
+        <div class="${aCls} col-span-2"><label>${aLk?lk:''}Street Address${aLk?'':'<span class="req">*</span>'}</label>${addrF}</div>
+        <div class="${aCls}"><label>${aLk?lk:''}Suite</label>${suiteF}</div>
+        <div class="${aCls}"><label>${aLk?lk:''}Floor</label>${floorF}</div>
+      </div>
+      <div style="margin-top:14px;" class="grid cols-3">
+        <div class="${aCls}"><label>${aLk?lk:''}City${aLk?'':'<span class="req">*</span>'}</label>${cityF}</div>
+        <div class="${aCls}"><label>${aLk?lk:''}State${aLk?'':'<span class="req">*</span>'}</label>${stateF}</div>
+        <div class="${aCls}"><label>${aLk?lk:''}ZIP${aLk?'':'<span class="req">*</span>'}</label>${zipF}</div>
+      </div>
+    </div>
 
-  html += `<div class="cs-section">
-    <div class="cs-section-title">Contacts</div>
-    <div class="cs-contacts">${contactsHtml}</div>
-  </div>`;
-
-  // Ship-to address (if router = yes and address filled)
-  if (!routerNo && shipAddrParts) {
-    html += `<div class="cs-section">
-      <div class="cs-section-title">Router Ship-to Address</div>
-      <div class="cs-grid">
-        <div class="cs-item" style="grid-column:span 2;">
-          <div class="cs-label">Address</div>
-          <div class="cs-value">${shipAddrParts}</div>
+    <!-- Location Contacts -->
+    <div class="site-subsection">
+      <div class="site-subsection-title">Location Contacts</div>
+      <div class="contact-card" style="margin-bottom:14px;">
+        <div class="card-label">Location Contact (LCON)</div>
+        <div class="copy-from-wrap"><label>Copy from</label><select class="copy-from-select site-copy-select" data-site="${n}" data-target="lcon" onchange="copySiteContact(this)"><option value="">— select a contact to copy —</option></select></div>
+        <div class="grid cols-3">
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Site${n}_LCON_Name" data-site="${n}" data-sfield="lcon-name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Site${n}_LCON_Email" data-site="${n}" data-sfield="lcon-email" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Phone<span class="req">*</span></label><input type="tel" name="Site${n}_LCON_Phone" data-site="${n}" data-sfield="lcon-phone" placeholder="555-555-5555" required><span class="field-error">Required.</span></div>
         </div>
       </div>
-    </div>`;
-  }
-
-  // Billing address (if filled)
-  if (billAddrParts) {
-    html += `<div class="cs-section">
-      <div class="cs-section-title">Billing Address</div>
-      <div class="cs-grid">
-        <div class="cs-item" style="grid-column:span 2;">
-          <div class="cs-label">Address</div>
-          <div class="cs-value">${billAddrParts}</div>
+      <div class="contact-card" style="margin-bottom:0;">
+        <div class="card-label">Alternate Location Contact</div>
+        <div class="copy-from-wrap"><label>Copy from</label><select class="copy-from-select site-copy-select" data-site="${n}" data-target="alt-lcon" data-exclude-site-lcon="true" onchange="copySiteContact(this)"><option value="">— select a contact to copy —</option></select></div>
+        <div class="grid cols-3">
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Site${n}_AltLCON_Name" data-site="${n}" data-sfield="alt-lcon-name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Site${n}_AltLCON_Email" data-site="${n}" data-sfield="alt-lcon-email" required><span class="field-error">Required.</span></div>
+          <div class="field" id="site${n}-field-alt-lcon-phone">
+            <label>Phone<span class="req">*</span> <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from LCON)</span></label>
+            <input type="tel" name="Site${n}_AltLCON_Phone" data-site="${n}" data-sfield="alt-lcon-phone" placeholder="555-555-5555" required>
+            <span class="field-error">Must be different from Location Contact phone.</span>
+          </div>
         </div>
       </div>
-    </div>`;
+    </div>
+
+    <!-- Router Ship-to (per-site, hidden if Router = No) -->
+    <div class="site-subsection site-shipto ${shiptoHidden}" id="site${n}-shipto">
+      <div class="site-subsection-title">Router Ship-to</div>
+      <div class="contact-card" style="margin-bottom:14px;">
+        <div class="card-label">Router Ship-to Contact</div>
+        <div class="copy-from-wrap"><label>Copy from</label><select class="copy-from-select site-copy-select" data-site="${n}" data-target="shipto-${n}" onchange="copySiteContact(this)"><option value="">— select a contact to copy —</option></select></div>
+        <div class="grid cols-3">
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Site${n}_ShipTo_Name" data-site="${n}" data-sfield="shipto-${n}-name" ${routerIsNo?'':'required'}><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Site${n}_ShipTo_Email" data-site="${n}" data-sfield="shipto-${n}-email" ${routerIsNo?'':'required'}><span class="field-error">Required.</span></div>
+          <div class="field"><label>Phone<span class="req">*</span></label><input type="tel" name="Site${n}_ShipTo_Phone" data-site="${n}" data-sfield="shipto-${n}-phone" placeholder="555-555-5555" ${routerIsNo?'':'required'}><span class="field-error">Required.</span></div>
+        </div>
+      </div>
+      <div class="contact-card" style="margin-bottom:0;">
+        <div class="card-label">Router Ship-to Address <span class="optional-badge">if different from service address</span></div>
+        <div class="grid cols-addr">
+          <div class="field col-span-2"><label>Address Line 1</label><input type="text" name="Site${n}_ShipTo_Addr1"></div>
+          <div class="field"><label>Address Line 2</label><input type="text" name="Site${n}_ShipTo_Addr2"></div>
+        </div>
+        <div style="margin-top:14px;" class="grid cols-3">
+          <div class="field"><label>City</label><input type="text" name="Site${n}_ShipTo_City"></div>
+          <div class="field"><label>State</label><input type="text" name="Site${n}_ShipTo_State" placeholder="TX" maxlength="2"></div>
+          <div class="field"><label>ZIP</label><input type="text" name="Site${n}_ShipTo_ZIP" placeholder="77479"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>`;
+}
+
+function updateSiteShipTo(n){
+  const rv=gi(`site${n}-hf-router`).toLowerCase();
+  const isNo=rv==='no';
+  const section=document.getElementById(`site${n}-shipto`);
+  if(!section) return;
+  section.classList.toggle('hidden',isNo);
+  // Toggle required on ship-to contact fields
+  section.querySelectorAll(`[name="Site${n}_ShipTo_Name"],[name="Site${n}_ShipTo_Email"],[name="Site${n}_ShipTo_Phone"]`).forEach(el=>{el.required=!isNo;});
+}
+
+function addSite(sd){
+  const data=sd||{name:'',addr:'',suite:'',floor:'',city:'',state:'',zip:'',product:'',router:'',speed:'',mrc:''};
+  const idx=siteCount; siteCount++;
+  document.getElementById('sites-container').insertAdjacentHTML('beforeend',buildSiteBlock(idx,data));
+  const n=idx+1;
+  // Phone uniqueness listeners
+  const lconI=document.querySelector(`[name="Site${n}_LCON_Phone"]`);
+  const altI=document.querySelector(`[name="Site${n}_AltLCON_Phone"]`);
+  if(lconI&&altI)[lconI,altI].forEach(el=>el.addEventListener('input',()=>checkSiteAltLconPhone(n)));
+  // Required listeners
+  document.querySelectorAll(`#site-block-${n} [required]`).forEach(el=>{
+    ['input','change'].forEach(evt=>el.addEventListener(evt,()=>{const f=el.closest('.field');if(el.value.trim())f&&f.classList.remove('has-error');}));
+  });
+  // Apply initial ship-to visibility based on pre-filled router value
+  updateSiteShipTo(n);
+  refreshAllCopyDropdowns();
+}
+
+function initSites(){getSiteParams().forEach(sd=>addSite(sd));}
+initSites();
+
+// ── Shared contacts (no shipto here — it's per-site now) ──
+const SHARED_CONTACTS=[
+  {key:'main',   label:'Main Order Contact',      nameField:'[name="MainContact_Name"]',  emailField:'[name="MainContact_Email"]',  phoneField:'#main-phone'},
+  {key:'alt-main',label:'Alternate Order Contact',nameField:'[data-contact="alt-main"][data-field="name"]',emailField:'[data-contact="alt-main"][data-field="email"]',phoneField:'#alt-main-phone'},
+  {key:'tech',   label:'Technical Contact',       nameField:'[data-contact="tech"][data-field="name"]',   emailField:'[data-contact="tech"][data-field="email"]',   phoneField:'[data-contact="tech"][data-field="phone"]'},
+  {key:'billing',label:'Billing Contact',         nameField:'[data-contact="billing"][data-field="name"]',emailField:'[data-contact="billing"][data-field="email"]',phoneField:'[data-contact="billing"][data-field="phone"]'},
+];
+
+function getSharedContactData(key){
+  const def=SHARED_CONTACTS.find(c=>c.key===key);if(!def)return null;
+  return{name:gv(def.nameField),email:gv(def.emailField),phone:gv(def.phoneField)};
+}
+function getSiteContactData(siteN,type){
+  if(type==='lcon'||type==='alt-lcon'){
+    const p=type==='lcon'?`Site${siteN}_LCON`:`Site${siteN}_AltLCON`;
+    return{name:gv(`[name="${p}_Name"]`),email:gv(`[name="${p}_Email"]`),phone:gv(`[name="${p}_Phone"]`)};
   }
+  // Ship-to per site: key like "shipto-1"
+  if(type.startsWith('shipto-')){
+    const sn=type.replace('shipto-','');
+    return{name:gv(`[name="Site${sn}_ShipTo_Name"]`),email:gv(`[name="Site${sn}_ShipTo_Email"]`),phone:gv(`[name="Site${sn}_ShipTo_Phone"]`)};
+  }
+  return{name:'',email:'',phone:''};
+}
+
+function refreshAllCopyDropdowns(){
+  // Shared dropdowns (tech, billing)
+  document.querySelectorAll('.copy-from-select:not(.site-copy-select)').forEach(sel=>{
+    const tKey=sel.getAttribute('onchange').match(/'([^']+)'\)/)[1];
+    const tIdx=SHARED_CONTACTS.findIndex(c=>c.key===tKey);
+    const cur=sel.value;
+    sel.innerHTML='<option value="">— select a contact to copy —</option>';
+    for(let i=0;i<tIdx;i++){
+      const c=SHARED_CONTACTS[i],d=getSharedContactData(c.key);
+      if(d&&d.name){const o=document.createElement('option');o.value=c.key;o.textContent=c.label+' ('+d.name+')';sel.appendChild(o);}
+    }
+    if(cur&&sel.querySelector(`option[value="${cur}"]`))sel.value=cur;
+  });
+  // Site dropdowns
+  document.querySelectorAll('.site-copy-select').forEach(sel=>{
+    const siteN=parseInt(sel.dataset.site),target=sel.dataset.target;
+    const excludeSiteLcon=sel.dataset.excludeSiteLcon==='true';
+    const cur=sel.value;
+    sel.innerHTML='<option value="">— select a contact to copy —</option>';
+    // Shared contacts as sources
+    SHARED_CONTACTS.forEach(c=>{
+      const d=getSharedContactData(c.key);
+      if(d&&d.name){const o=document.createElement('option');o.value='shared:'+c.key;o.textContent=c.label+' ('+d.name+')';sel.appendChild(o);}
+    });
+    // Other sites' LCONs, alt-LCONs, and ship-tos as sources
+    document.querySelectorAll('.site-block').forEach(bl=>{
+      const bN=parseInt(bl.dataset.site);
+      if(bN===siteN&&target==='lcon') return;
+      const ld=getSiteContactData(bN,'lcon'),ald=getSiteContactData(bN,'alt-lcon'),std=getSiteContactData(bN,`shipto-${bN}`);
+      if(ld&&ld.name&&!(excludeSiteLcon&&bN===siteN)){const o=document.createElement('option');o.value=`site:${bN}:lcon`;o.textContent=`Site ${bN} LCON (${ld.name})`;sel.appendChild(o);}
+      if(ald&&ald.name&&bN!==siteN){const o=document.createElement('option');o.value=`site:${bN}:alt-lcon`;o.textContent=`Site ${bN} Alt LCON (${ald.name})`;sel.appendChild(o);}
+      if(std&&std.name&&bN!==siteN){const o=document.createElement('option');o.value=`site:${bN}:shipto-${bN}`;o.textContent=`Site ${bN} Ship-to (${std.name})`;sel.appendChild(o);}
+    });
+    if(cur&&sel.querySelector(`option[value="${cur}"]`))sel.value=cur;
+  });
+}
+
+function copyContact(selEl,targetKey){
+  const sk=selEl.value;if(!sk)return;
+  const sd=getSharedContactData(sk);if(!sd)return;
+  const td=SHARED_CONTACTS.find(c=>c.key===targetKey);if(!td)return;
+  const ne=document.querySelector(td.nameField),ee=document.querySelector(td.emailField),pe=document.querySelector(td.phoneField);
+  if(ne){ne.value=sd.name;ne.dispatchEvent(new Event('input'));}
+  if(ee){ee.value=sd.email;ee.dispatchEvent(new Event('input'));}
+  if(pe){pe.value=sd.phone;pe.dispatchEvent(new Event('input'));}
+  selEl.value='';checkAltMainPhone();refreshAllCopyDropdowns();
+}
+
+function copySiteContact(selEl){
+  const val=selEl.value;if(!val)return;
+  const siteN=parseInt(selEl.dataset.site),target=selEl.dataset.target;
+  let sd=null;
+  if(val.startsWith('shared:')) sd=getSharedContactData(val.replace('shared:',''));
+  else if(val.startsWith('site:')){const p=val.split(':');sd=getSiteContactData(parseInt(p[1]),p.slice(2).join(':'));}
+  if(!sd)return;
+  // Determine target fields
+  let ne,ee,pe;
+  if(target==='lcon'||target==='alt-lcon'){
+    const prefix=target==='lcon'?`Site${siteN}_LCON`:`Site${siteN}_AltLCON`;
+    ne=document.querySelector(`[name="${prefix}_Name"]`);ee=document.querySelector(`[name="${prefix}_Email"]`);pe=document.querySelector(`[name="${prefix}_Phone"]`);
+  } else if(target.startsWith('shipto-')){
+    ne=document.querySelector(`[name="Site${siteN}_ShipTo_Name"]`);ee=document.querySelector(`[name="Site${siteN}_ShipTo_Email"]`);pe=document.querySelector(`[name="Site${siteN}_ShipTo_Phone"]`);
+  }
+  if(ne){ne.value=sd.name;ne.dispatchEvent(new Event('input'));}
+  if(ee){ee.value=sd.email;ee.dispatchEvent(new Event('input'));}
+  if(pe){pe.value=sd.phone;pe.dispatchEvent(new Event('input'));}
+  selEl.value='';checkSiteAltLconPhone(siteN);refreshAllCopyDropdowns();
+}
+
+SHARED_CONTACTS.forEach(c=>{
+  [c.nameField,c.emailField,c.phoneField].forEach(s=>{const el=document.querySelector(s);if(el)el.addEventListener('input',refreshAllCopyDropdowns);});
+});
+refreshAllCopyDropdowns();
+
+// ── Phone checks ──
+function checkAltMainPhone(){
+  const field=document.getElementById('field-alt-main-phone');
+  const alt=gi('alt-main-phone'),main=gi('main-phone');
+  if(alt&&phonesMatch(alt,main)){field.classList.add('has-error');return false;}
+  field.classList.remove('has-error');return true;
+}
+function checkSiteAltLconPhone(n){
+  const field=document.getElementById(`site${n}-field-alt-lcon-phone`);if(!field)return true;
+  const lcon=gv(`[name="Site${n}_LCON_Phone"]`),alt=gv(`[name="Site${n}_AltLCON_Phone"]`);
+  if(alt&&phonesMatch(alt,lcon)){field.classList.add('has-error');return false;}
+  field.classList.remove('has-error');return true;
+}
+['alt-main-phone','main-phone'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',checkAltMainPhone);});
+
+// ── Validation ──
+function validateRequired(){
+  let valid=true;
+  document.querySelectorAll('[required]').forEach(el=>{
+    const f=el.closest('.field');
+    if(!el.value.trim()){f&&f.classList.add('has-error');valid=false;}
+    else{f&&f.classList.remove('has-error');}
+  });
+  document.querySelectorAll('.site-block').forEach(bl=>{const n=parseInt(bl.dataset.site);if(!checkSiteAltLconPhone(n))valid=false;});
+  if(!checkAltMainPhone())valid=false;
+  return valid;
+}
+document.querySelectorAll('[required]').forEach(el=>{
+  ['input','change'].forEach(evt=>el.addEventListener(evt,()=>{const f=el.closest('.field');if(el.value.trim())f&&f.classList.remove('has-error');}));
+});
+
+// ── Confirm summary ──
+function buildSummary(){
+  function section(title,rows){
+    const items=rows.filter(r=>r).map(([l,v])=>`<div class="cs-item"><div class="cs-label">${l}</div><div class="cs-value${!v?' empty':''}">${v||'—'}</div></div>`).join('');
+    return `<div class="cs-section"><div class="cs-section-title">${title}</div><div class="cs-grid">${items}</div></div>`;
+  }
+  function cCard(title,name,email,phone){
+    return `<div class="cs-contact-card"><div class="cs-contact-title">${title}</div><div class="cs-contact-row"><strong>${name||'—'}</strong></div><div class="cs-contact-row dim">${email||'—'}</div><div class="cs-contact-row dim">${phone||'—'}</div></div>`;
+  }
+
+  let html='';
+  html+=section('Contract Details',[['Official Company Name',gv('[name="OfficialCompanyName"]')],['Signer Name',gv('[name="SignerName"]')],['Signer Title',gv('[name="SignerTitle"]')],['Signer Email',gv('[name="SignerEmail"]')],['Signer Phone',gv('[name="SignerPhone"]')]]);
+
+  // Shared contacts
+  const shHtml=`<div class="cs-contacts">${[
+    cCard('Main Order Contact',gv('[name="MainContact_Name"]'),gv('[name="MainContact_Email"]'),gi('main-phone')),
+    cCard('Alternate Order Contact',gv('[data-contact="alt-main"][data-field="name"]'),gv('[data-contact="alt-main"][data-field="email"]'),gi('alt-main-phone')),
+    cCard('Technical Contact',gv('[data-contact="tech"][data-field="name"]'),gv('[data-contact="tech"][data-field="email"]'),gv('[data-contact="tech"][data-field="phone"]')),
+    cCard('Billing Contact',gv('[data-contact="billing"][data-field="name"]'),gv('[data-contact="billing"][data-field="email"]'),gv('[data-contact="billing"][data-field="phone"]')),
+  ].join('')}</div>`;
+  html+=`<div class="cs-section"><div class="cs-section-title">Shared Contacts</div>${shHtml}</div>`;
+
+  // Billing address
+  const billAddr=[gv('[name="Billing_Addr1"]'),gv('[name="Billing_Addr2"]'),[gv('[name="Billing_City"]'),gv('[name="Billing_State"]'),gv('[name="Billing_ZIP"]')].filter(Boolean).join(', ')].filter(Boolean).join('<br>');
+  if(billAddr) html+=section('Billing Address',[['Address',billAddr]]);
+
+  // Sites
+  document.querySelectorAll('.site-block').forEach(bl=>{
+    const n=parseInt(bl.dataset.site);
+    const mrc=gv(`[name="Site${n}_MRC"]`)||gi(`site${n}-disp-mrc`);
+    const mrcD=mrc&&!mrc.startsWith('$')?'$'+mrc:mrc;
+    const addrParts=[
+      gv(`[name="Site${n}_Address"]`)||gi(`site${n}-disp-addr`),
+      [gv(`[name="Site${n}_Suite"]`)?'Ste '+gv(`[name="Site${n}_Suite"]`):'',gv(`[name="Site${n}_Floor"]`)?'Fl '+gv(`[name="Site${n}_Floor"]`):''].filter(Boolean).join(', '),
+      [gv(`[name="Site${n}_City"]`)||gi(`site${n}-disp-city`),gv(`[name="Site${n}_State"]`)||gi(`site${n}-disp-state`),gv(`[name="Site${n}_ZIP"]`)||gi(`site${n}-disp-zip`)].filter(Boolean).join(', ')
+    ].filter(Boolean).join('<br>');
+    const routerVal=gi(`site${n}-hf-router`)||gv(`[name="Site${n}_Router"]`);
+    const hasRouter=routerVal.toLowerCase()!=='no';
+
+    const shipToContact=hasRouter?cCard('Router Ship-to Contact',gv(`[name="Site${n}_ShipTo_Name"]`),gv(`[name="Site${n}_ShipTo_Email"]`),gv(`[name="Site${n}_ShipTo_Phone"]`)):'';
+    const shipAddr=[gv(`[name="Site${n}_ShipTo_Addr1"]`),gv(`[name="Site${n}_ShipTo_Addr2"]`),[gv(`[name="Site${n}_ShipTo_City"]`),gv(`[name="Site${n}_ShipTo_State"]`),gv(`[name="Site${n}_ShipTo_ZIP"]`)].filter(Boolean).join(', ')].filter(Boolean).join('<br>');
+
+    html+=`<div class="cs-section"><div class="cs-section-title">Site ${n} — ${gv(`[name="Site${n}_Name"]`)||'Unnamed'}</div>
+    <div class="cs-site-block">
+      <div class="cs-grid" style="margin-bottom:16px;">
+        <div class="cs-item"><div class="cs-label">Product</div><div class="cs-value${!(gv(`[name="Site${n}_Product"]`)||gi(`site${n}-disp-product`))?' empty':''}">${gv(`[name="Site${n}_Product"]`)||gi(`site${n}-disp-product`)||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">Router Included</div><div class="cs-value${!routerVal?' empty':''}">${routerVal||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">Speed</div><div class="cs-value${!(gv(`[name="Site${n}_Speed"]`)||gi(`site${n}-disp-speed`))?' empty':''}">${gv(`[name="Site${n}_Speed"]`)||gi(`site${n}-disp-speed`)||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">MRC</div><div class="cs-value${!mrcD?' empty':''}">${mrcD||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">Handoff</div><div class="cs-value${!gv(`[name="Site${n}_Handoff"]`)?' empty':''}">${gv(`[name="Site${n}_Handoff"]`)||'—'}</div></div>
+        <div class="cs-item" style="grid-column:span 2;"><div class="cs-label">Address</div><div class="cs-value">${addrParts||'—'}</div></div>
+      </div>
+      <div class="cs-contacts">
+        ${cCard('Location Contact (LCON)',gv(`[name="Site${n}_LCON_Name"]`),gv(`[name="Site${n}_LCON_Email"]`),gv(`[name="Site${n}_LCON_Phone"]`))}
+        ${cCard('Alternate Location Contact',gv(`[name="Site${n}_AltLCON_Name"]`),gv(`[name="Site${n}_AltLCON_Email"]`),gv(`[name="Site${n}_AltLCON_Phone"]`))}
+        ${shipToContact}
+      </div>
+      ${hasRouter&&shipAddr?`<div style="margin-top:12px;"><div class="cs-label" style="font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Router Ship-to Address</div><div style="font-size:13px;color:var(--text);">${shipAddr}</div></div>`:''}
+    </div></div>`;
+  });
 
   return html;
 }
 
-// ── Show / hide confirmation overlay ──
-function showConfirm() {
-  document.getElementById('confirm-content').innerHTML = buildSummary();
-  document.getElementById('confirm-result').className = '';
-  document.getElementById('confirm-result').style.display = 'none';
-  const btn = document.getElementById('btn-submit-confirm');
-  btn.textContent = 'Confirm & Submit →'; btn.disabled = false;
-  const overlay = document.getElementById('confirm-overlay');
-  overlay.classList.add('visible');
-  overlay.scrollTop = 0;
-  document.body.style.overflow = 'hidden';
+function showConfirm(){
+  document.getElementById('confirm-content').innerHTML=buildSummary();
+  document.getElementById('confirm-result').className='';document.getElementById('confirm-result').style.display='none';
+  const btn=document.getElementById('btn-submit-confirm');btn.textContent='Confirm & Submit →';btn.disabled=false;
+  document.getElementById('confirm-actions').style.display='';
+  const ov=document.getElementById('confirm-overlay');ov.classList.add('visible');ov.scrollTop=0;
+  document.body.style.overflow='hidden';
 }
+function hideConfirm(){document.getElementById('confirm-overlay').classList.remove('visible');document.body.style.overflow='';}
 
-function hideConfirm() {
-  document.getElementById('confirm-overlay').classList.remove('visible');
-  document.body.style.overflow = '';
-}
-
-// Review button click
-document.getElementById('btn-review').addEventListener('click', function() {
-  const reqOk     = validateRequired();
-  const altMainOk = checkAltMainPhone();
-  const altLconOk = checkAltLconPhone();
-  if (!reqOk || !altMainOk || !altLconOk) {
-    const r = document.getElementById('form-result');
-    r.className = 'error';
-    r.textContent = 'Please fix the highlighted fields before reviewing.';
-    document.querySelector('.has-error')?.scrollIntoView({ behavior:'smooth', block:'center' });
-    return;
+document.getElementById('btn-review').addEventListener('click',function(){
+  if(!validateRequired()){
+    const r=document.getElementById('form-result');r.className='error';r.textContent='Please fix the highlighted fields before reviewing.';
+    document.querySelector('.has-error')?.scrollIntoView({behavior:'smooth',block:'center'});return;
   }
-  document.getElementById('form-result').className = '';
-  document.getElementById('form-result').textContent = '';
+  document.getElementById('form-result').className='';document.getElementById('form-result').textContent='';
   showConfirm();
 });
 
-// ── Actual submission from confirm screen ──
-async function submitOrder() {
-  const btn = document.getElementById('btn-submit-confirm');
-  btn.textContent = 'Submitting…'; btn.disabled = true;
-
-  const result = document.getElementById('confirm-result');
-  result.style.display = 'none';
-
-  const formData = new FormData(document.getElementById('order-form'));
-
-  try {
-    const res  = await fetch('https://api.web3forms.com/submit', { method:'POST', body: formData });
-    const json = await res.json();
-    if (json.success) {
-      result.className = 'success';
-      result.style.display = 'block';
-      result.textContent = "✓ Order received. We'll be in touch shortly to confirm next steps.";
-      // Hide the action buttons after success
-      document.getElementById('confirm-actions').style.display = 'none';
-      // Reset the form in background
-      document.getElementById('order-form').reset();
-      applyParams();
-      refreshCopyDropdowns();
-    } else {
-      throw new Error(json.message || 'Submission failed');
-    }
-  } catch(err) {
-    result.className = 'error';
-    result.style.display = 'block';
-    result.textContent = '✗ Submission failed: ' + err.message + '. Please email us directly.';
-    btn.textContent = 'Confirm & Submit →'; btn.disabled = false;
+async function submitOrder(){
+  const btn=document.getElementById('btn-submit-confirm');btn.textContent='Submitting…';btn.disabled=true;
+  const result=document.getElementById('confirm-result');result.style.display='none';
+  try{
+    const res=await fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(document.getElementById('order-form'))});
+    const json=await res.json();
+    if(json.success){
+      result.className='success';result.style.display='block';result.textContent="✓ Order received. We'll be in touch shortly to confirm next steps.";
+      document.getElementById('confirm-actions').style.display='none';
+      document.getElementById('order-form').reset();applyParams();refreshAllCopyDropdowns();
+    }else{throw new Error(json.message||'Submission failed');}
+  }catch(err){
+    result.className='error';result.style.display='block';result.textContent='✗ Submission failed: '+err.message+'. Please email us directly.';
+    btn.textContent='Confirm & Submit →';btn.disabled=false;
   }
 }
 </script>
