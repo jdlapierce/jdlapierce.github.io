@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Order Form — Cirrux Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0a1628;
+    --navy2:   #0f2040;
+    --blue:    #00AEEF;
+    --blue-dk: #0096d6;
+    --ice:     #e8f7fd;
+    --white:   #ffffff;
+    --gray:    #f4f8fb;
+    --muted:   #6b7899;
+    --border:  #dde8f0;
+    --text:    #1a2340;
+    --shadow:  0 4px 24px rgba(0,174,239,0.10);
+    --radius:  10px;
+    --display: 'Syne', sans-serif;
+    --body:    'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--body);
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 80px;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+
+  /* ── Nav ── */
+  nav {
+    background: #ffffff;
+    border-bottom: 1px solid #dde3f0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    height: 150px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .nav-logo { display: flex; align-items: center; line-height: 1; }
+  .nav-logo img { height: 195px; width: auto; display: block; }
+
+  /* Customer logo in nav */
+  .nav-customer { display: none; align-items: center; gap: 0; }
+  .nav-customer.visible { display: flex; }
+  .nav-divider { width: 1px; height: 48px; background: var(--border); margin: 0 28px; flex-shrink: 0; }
+  .nav-customer img { max-height: 48px; max-width: 180px; width: auto; object-fit: contain; }
+
+  .nav-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+  .nav-right .nav-site {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .nav-right .nav-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── Page hero ── */
+  .page-hero {
+    background: var(--navy);
+    padding: 52px 28px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 80% at 80% 50%, rgba(0,174,239,0.10) 0%, transparent 70%);
+  }
+  .page-hero-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .page-hero h1 {
+    font-family: var(--display);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .page-hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.60);
+    max-width: 560px;
+    line-height: 1.75;
+    margin-bottom: 0;
+  }
+  /* Customer name in hero */
+  .hero-customer {
+    display: none;
+    margin-bottom: 10px;
+  }
+  .hero-customer.visible { display: block; }
+  .hero-customer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,174,239,0.12);
+    border: 1px solid rgba(0,174,239,0.25);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #7dd4f5;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Page wrap ── */
+  .page-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 28px 0;
+  }
+
+  /* ── Section headers ── */
+  .section { margin-bottom: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: var(--ice);
+    border: 1px solid rgba(0,174,239,0.25);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Grids ── */
+  .grid { display: grid; gap: 14px; }
+  .cols-2    { grid-template-columns: 1fr 1fr; }
+  .cols-3    { grid-template-columns: 1fr 1fr 1fr; }
+  .cols-4    { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .cols-4w   { grid-template-columns: 2fr 1fr 1fr 1fr; }
+  .cols-addr { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-3 { grid-column: span 3; }
+  .col-span-4 { grid-column: span 4; }
+
+  /* ── Fields ── */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  label .req { color: var(--blue); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 14px;
+    padding: 10px 13px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0,174,239,0.12);
+  }
+  input::placeholder, textarea::placeholder { color: #b0bdd4; }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    padding-right: 34px;
+  }
+
+  /* Locked / pre-filled fields */
+  .locked-field input {
+    background: var(--gray);
+    border-color: var(--border);
+    color: var(--blue-dk);
+    cursor: default;
+    font-weight: 500;
+  }
+  .lock-icon {
+    display: inline-flex;
+    align-items: center;
+    color: rgba(0,174,239,0.55);
+    margin-right: 4px;
+  }
+  .lock-icon svg { width: 9px; height: 9px; }
+
+  /* Notice banners */
+  .notice {
+    border-radius: 8px;
+    padding: 11px 15px;
+    font-size: 13px;
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-bottom: 18px;
+    line-height: 1.55;
+  }
+  .notice svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+  .notice-blue {
+    background: var(--ice);
+    border: 1px solid rgba(0,174,239,0.25);
+    color: #1a7aa8;
+  }
+  .notice-gray {
+    background: var(--gray);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* Contact cards */
+  .contact-card {
+    background: var(--gray);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .contact-card:focus-within {
+    box-shadow: var(--shadow);
+    border-color: rgba(0,174,239,0.3);
+  }
+  .contact-card .card-label {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .optional-badge {
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 10px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    background: var(--white);
+    padding: 1px 8px;
+    border-radius: 20px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* Submit */
+  .submit-wrap {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .submit-note {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 400px;
+    line-height: 1.65;
+  }
+  button[type="submit"] {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 13px 36px;
+    border-radius: 8px;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    box-shadow: 0 4px 20px rgba(0,174,239,0.38);
+  }
+  button[type="submit"]:hover { background: var(--blue-dk); transform: translateY(-1px); }
+  button[type="submit"]:active { transform: translateY(0); }
+  button[type="submit"]:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* Result messages */
+  #form-result {
+    margin-top: 24px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+    line-height: 1.5;
+  }
+  #form-result.success {
+    background: #edfaf3;
+    border: 1.5px solid #7ddaa8;
+    color: #1a6b42;
+    display: block;
+  }
+  #form-result.error {
+    background: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    color: #991b1b;
+    display: block;
+  }
+
+  /* Validation errors */
+  .field.has-error input,
+  .field.has-error select { border-color: #ef4444 !important; }
+  .field-error {
+    font-size: 11px;
+    color: #dc2626;
+    font-family: var(--body);
+    display: none;
+    font-weight: 500;
+  }
+  .field.has-error .field-error { display: block; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { height: 100px; }
+    .nav-logo img { height: 120px; }
+    .nav-customer img { max-height: 36px; max-width: 130px; }
+    .nav-divider { height: 36px; margin: 0 18px; }
+  }
+  @media (max-width: 640px) {
+    .page-wrap { padding: 28px 16px 0; }
+    .cols-2, .cols-3, .cols-4, .cols-4w, .cols-addr { grid-template-columns: 1fr; }
+    .col-span-2, .col-span-3, .col-span-4 { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;align-items:center;">
+      <a href="https://www.cirruxnet.com" class="nav-logo">
+        <img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks">
+      </a>
+      <!-- Customer logo — shown only when ?customerlogo= param present -->
+      <div class="nav-customer" id="nav-customer">
+        <div class="nav-divider"></div>
+        <img src="" alt="Customer" id="nav-customer-img">
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-site">Service Order Form</span>
+      <span class="nav-sub">cirruxnet.com</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-customer" id="hero-customer">
+      <span class="hero-customer-badge" id="hero-customer-badge"></span>
+    </div>
+    <h1>Service Order</h1>
+    <p>Please complete all required fields below and submit to begin provisioning your service.</p>
+  </div>
+</div>
+
+<!-- ── Form body ── -->
+<div class="page-wrap">
+  <form id="order-form" novalidate>
+
+    <!-- Hidden fields -->
+    <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+    <input type="hidden" name="Product" id="hf-product">
+    <input type="hidden" name="Router"  id="hf-router">
+    <input type="hidden" name="Speed"   id="hf-speed">
+    <input type="hidden" name="MRC"     id="hf-mrc">
+    <input type="hidden" name="ServiceAddress" id="hf-addr">
+    <input type="hidden" name="ServiceSuite"   id="hf-suite">
+    <input type="hidden" name="ServiceFloor"   id="hf-floor">
+    <input type="hidden" name="ServiceCity"    id="hf-city">
+    <input type="hidden" name="ServiceState"   id="hf-state">
+    <input type="hidden" name="ServiceZIP"     id="hf-zip">
+    <input type="hidden" name="CustomerName"   id="hf-customername">
+
+    <!-- ── 01: ORDER DETAILS ── -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-title">Order Details</span>
+      </div>
+
+      <div class="notice notice-blue">
+        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>
+        Product, router, speed, and MRC were pre-filled from your quote. Contact us if anything looks incorrect.
+      </div>
+
+      <div class="grid cols-4">
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Product</label>
+          <input type="text" id="disp-product" readonly tabindex="-1">
+        </div>
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Router</label>
+          <input type="text" id="disp-router" readonly tabindex="-1">
+        </div>
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Speed</label>
+          <input type="text" id="disp-speed" readonly tabindex="-1">
+        </div>
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>MRC</label>
+          <input type="text" id="disp-mrc" readonly tabindex="-1">
+        </div>
+      </div>
+
+      <div style="margin-top:14px;" class="grid cols-4">
+        <div class="field">
+          <label>Handoff (from Ciena)<span class="req">*</span></label>
+          <select name="Handoff" id="handoff" required>
+            <option value="">— Select handoff type —</option>
+            <option value="1000BaseT">1000BaseT</option>
+            <option value="1G Single Mode">1G Single Mode</option>
+            <option value="1G Multimode">1G Multimode</option>
+            <option value="10G Single Mode">10G Single Mode</option>
+            <option value="10G Multimode">10G Multimode</option>
+          </select>
+          <span class="field-error">Please select a handoff type.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 02: CONTRACT DETAILS ── -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <span class="section-title">Contract Details</span>
+      </div>
+
+      <div class="notice notice-gray">
+        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>
+        Please provide the exact legal name your organization uses for contracts, and the name and title of the individual authorized to sign.
+      </div>
+
+      <div class="grid cols-4w">
+        <div class="field col-span-2">
+          <label>Official Company Name for Contract<span class="req">*</span></label>
+          <input type="text" name="OfficialCompanyName" id="inp-company" placeholder="Full legal entity name" required>
+          <span class="field-error">Required.</span>
+        </div>
+        <div class="field">
+          <label>Signer Name<span class="req">*</span></label>
+          <input type="text" name="SignerName" id="inp-signer" placeholder="Full name" required>
+          <span class="field-error">Required.</span>
+        </div>
+        <div class="field">
+          <label>Signer Title<span class="req">*</span></label>
+          <input type="text" name="SignerTitle" id="inp-title" placeholder="e.g. VP of IT" required>
+          <span class="field-error">Required.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;" class="grid cols-4w">
+        <div class="field col-span-2">
+          <label>Signer Email<span class="req">*</span></label>
+          <input type="email" name="SignerEmail" id="inp-signer-email" placeholder="signer@company.com" required>
+          <span class="field-error">Required.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 03: SERVICE ADDRESS ── -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <span class="section-title">Service Address</span>
+      </div>
+
+      <div class="notice notice-blue">
+        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>
+        The service address has been pre-filled. Contact us if it is incorrect.
+      </div>
+
+      <div class="grid cols-4w" style="margin-bottom:14px;">
+        <div class="field col-span-2">
+          <label>Site Name<span class="req">*</span></label>
+          <input type="text" name="SiteName" id="inp-sitename" placeholder="e.g. Main Data Center" required>
+          <span class="field-error">Required.</span>
+        </div>
+      </div>
+
+      <div class="grid cols-addr">
+        <div class="field locked-field col-span-2">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Street Address</label>
+          <input type="text" id="disp-addr" readonly tabindex="-1">
+        </div>
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Suite</label>
+          <input type="text" id="disp-suite" readonly tabindex="-1">
+        </div>
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>Floor</label>
+          <input type="text" id="disp-floor" readonly tabindex="-1">
+        </div>
+      </div>
+      <div style="margin-top:14px;" class="grid cols-3">
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>City</label>
+          <input type="text" id="disp-city" readonly tabindex="-1">
+        </div>
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>State</label>
+          <input type="text" id="disp-state" readonly tabindex="-1">
+        </div>
+        <div class="field locked-field">
+          <label><span class="lock-icon"><svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>ZIP</label>
+          <input type="text" id="disp-zip" readonly tabindex="-1">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 04: CONTACTS ── -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <span class="section-title">Contacts</span>
+      </div>
+
+      <!-- Main Order Contact -->
+      <div class="contact-card">
+        <div class="card-label">Main Order Contact</div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label>Name<span class="req">*</span></label>
+            <input type="text" name="MainContact_Name" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Email<span class="req">*</span></label>
+            <input type="email" name="MainContact_Email" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Phone<span class="req">*</span></label>
+            <input type="tel" name="MainContact_Phone" id="main-phone" placeholder="555-555-5555" required>
+            <span class="field-error">Required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alternate Main Order Contact -->
+      <div class="contact-card">
+        <div class="card-label">Alternate Order Contact <span class="optional-badge">optional</span></div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" name="AltContact_Name">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="AltContact_Email">
+          </div>
+          <div class="field" id="field-alt-main-phone">
+            <label>Phone <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from Main)</span></label>
+            <input type="tel" name="AltContact_Phone" id="alt-main-phone" placeholder="555-555-5555">
+            <span class="field-error">Must be different from the Main Order Contact phone.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Contact (LCON) -->
+      <div class="contact-card">
+        <div class="card-label">Location Contact (LCON)</div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label>Name<span class="req">*</span></label>
+            <input type="text" name="LCON_Name" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Email<span class="req">*</span></label>
+            <input type="email" name="LCON_Email" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Phone<span class="req">*</span></label>
+            <input type="tel" name="LCON_Phone" id="lcon-phone" placeholder="555-555-5555" required>
+            <span class="field-error">Required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alternate LCON -->
+      <div class="contact-card">
+        <div class="card-label">Alternate Location Contact <span class="optional-badge">optional</span></div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" name="AltLCON_Name">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="AltLCON_Email">
+          </div>
+          <div class="field" id="field-alt-lcon-phone">
+            <label>Phone <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from LCON)</span></label>
+            <input type="tel" name="AltLCON_Phone" id="alt-lcon-phone" placeholder="555-555-5555">
+            <span class="field-error">Must be different from the Location Contact phone.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Contact -->
+      <div class="contact-card">
+        <div class="card-label">Technical Contact</div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label>Name<span class="req">*</span></label>
+            <input type="text" name="Tech_Name" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Email<span class="req">*</span></label>
+            <input type="email" name="Tech_Email" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Phone<span class="req">*</span></label>
+            <input type="tel" name="Tech_Phone" placeholder="555-555-5555" required>
+            <span class="field-error">Required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Router Ship-to Contact -->
+      <div class="contact-card">
+        <div class="card-label">Router Ship-to Contact</div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label>Name<span class="req">*</span></label>
+            <input type="text" name="ShipTo_Name" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Email<span class="req">*</span></label>
+            <input type="email" name="ShipTo_Email" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Phone<span class="req">*</span></label>
+            <input type="tel" name="ShipTo_Phone" placeholder="555-555-5555" required>
+            <span class="field-error">Required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Router Ship-to Address -->
+      <div class="contact-card">
+        <div class="card-label">Router Ship-to Address <span class="optional-badge">if different from service address</span></div>
+        <div class="grid cols-addr">
+          <div class="field col-span-2"><label>Address Line 1</label><input type="text" name="ShipTo_Addr1"></div>
+          <div class="field"><label>Address Line 2</label><input type="text" name="ShipTo_Addr2"></div>
+        </div>
+        <div style="margin-top:14px;" class="grid cols-3">
+          <div class="field"><label>City</label><input type="text" name="ShipTo_City"></div>
+          <div class="field"><label>State</label><input type="text" name="ShipTo_State" placeholder="TX" maxlength="2"></div>
+          <div class="field"><label>ZIP</label><input type="text" name="ShipTo_ZIP" placeholder="77479"></div>
+        </div>
+      </div>
+
+      <!-- Billing Contact -->
+      <div class="contact-card">
+        <div class="card-label">Billing Contact</div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label>Name<span class="req">*</span></label>
+            <input type="text" name="Billing_Name" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Email<span class="req">*</span></label>
+            <input type="email" name="Billing_Email" required>
+            <span class="field-error">Required.</span>
+          </div>
+          <div class="field">
+            <label>Phone<span class="req">*</span></label>
+            <input type="tel" name="Billing_Phone" placeholder="555-555-5555" required>
+            <span class="field-error">Required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Billing Address -->
+      <div class="contact-card">
+        <div class="card-label">Billing Address <span class="optional-badge">if different from service address</span></div>
+        <div class="grid cols-addr">
+          <div class="field col-span-2"><label>Address Line 1</label><input type="text" name="Billing_Addr1"></div>
+          <div class="field"><label>Address Line 2</label><input type="text" name="Billing_Addr2"></div>
+        </div>
+        <div style="margin-top:14px;" class="grid cols-3">
+          <div class="field"><label>City</label><input type="text" name="Billing_City"></div>
+          <div class="field"><label>State</label><input type="text" name="Billing_State" placeholder="TX" maxlength="2"></div>
+          <div class="field"><label>ZIP</label><input type="text" name="Billing_ZIP" placeholder="77479"></div>
+        </div>
+      </div>
+
+    </div><!-- /contacts -->
+
+    <div class="submit-wrap">
+      <p class="submit-note">By submitting this form you authorize Cirrux Networks to proceed with the service order as described above.</p>
+      <button type="submit">Submit Order →</button>
+    </div>
+
+    <div id="form-result"></div>
+
+  </form>
+</div><!-- /page-wrap -->
+
+<script>
+function normalizePhone(v) { return v.replace(/\D/g,''); }
+function phonesMatch(a,b) {
+  const na = normalizePhone(a), nb = normalizePhone(b);
+  return na.length >= 7 && nb.length >= 7 && na === nb;
+}
+
+const params = new URLSearchParams(window.location.search);
+
+const lockedMap = {
+  product: ['disp-product','hf-product'],
+  router:  ['disp-router', 'hf-router' ],
+  speed:   ['disp-speed',  'hf-speed'  ],
+  mrc:     ['disp-mrc',    'hf-mrc'    ],
+  addr:    ['disp-addr',   'hf-addr'   ],
+  suite:   ['disp-suite',  'hf-suite'  ],
+  floor:   ['disp-floor',  'hf-floor'  ],
+  city:    ['disp-city',   'hf-city'   ],
+  state:   ['disp-state',  'hf-state'  ],
+  zip:     ['disp-zip',    'hf-zip'    ],
+};
+
+const editableMap = {
+  sitename:    'inp-sitename',
+  company:     'inp-company',
+  signer:      'inp-signer',
+  title:       'inp-title',
+  signeremail: 'inp-signer-email',
+};
+
+function applyParams() {
+  for (const [key,[dispId,hiddenId]] of Object.entries(lockedMap)) {
+    const val = params.get(key) || '';
+    const d = document.getElementById(dispId);
+    const h = document.getElementById(hiddenId);
+    if (d) d.value = val || '—';
+    if (h) h.value = val;
+  }
+  for (const [key,elId] of Object.entries(editableMap)) {
+    const val = params.get(key) || '';
+    const el = document.getElementById(elId);
+    if (el && val) el.value = val;
+  }
+
+  // Customer logo — looks in /logos/ folder on the same site
+  const logoFile     = params.get('customerlogo') || '';
+  const customerName = params.get('customername') || '';
+
+  if (logoFile) {
+    const src = logoFile.startsWith('http') ? logoFile : '/logos/' + logoFile;
+    const navWrap = document.getElementById('nav-customer');
+    const navImg  = document.getElementById('nav-customer-img');
+    navImg.src = src;
+    navImg.alt = customerName || 'Customer';
+    navWrap.classList.add('visible');
+  }
+
+  if (customerName) {
+    const hf = document.getElementById('hf-customername');
+    if (hf) hf.value = customerName;
+    const badge = document.getElementById('hero-customer-badge');
+    const wrap  = document.getElementById('hero-customer');
+    if (badge && wrap) {
+      badge.textContent = 'Prepared for ' + customerName;
+      wrap.classList.add('visible');
+    }
+  }
+}
+applyParams();
+
+// ── Duplicate phone checks ──
+function checkAltMainPhone() {
+  const field = document.getElementById('field-alt-main-phone');
+  const alt   = document.getElementById('alt-main-phone').value;
+  const main  = document.getElementById('main-phone').value;
+  if (alt && phonesMatch(alt, main)) { field.classList.add('has-error'); return false; }
+  field.classList.remove('has-error'); return true;
+}
+function checkAltLconPhone() {
+  const field = document.getElementById('field-alt-lcon-phone');
+  const alt   = document.getElementById('alt-lcon-phone').value;
+  const lcon  = document.getElementById('lcon-phone').value;
+  if (alt && phonesMatch(alt, lcon)) { field.classList.add('has-error'); return false; }
+  field.classList.remove('has-error'); return true;
+}
+['alt-main-phone','main-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltMainPhone));
+['alt-lcon-phone','lcon-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltLconPhone));
+
+// ── Required validation ──
+function validateRequired() {
+  let valid = true;
+  document.querySelectorAll('[required]').forEach(el => {
+    const field = el.closest('.field');
+    if (!el.value.trim()) { field && field.classList.add('has-error'); valid = false; }
+    else                   { field && field.classList.remove('has-error'); }
+  });
+  return valid;
+}
+document.querySelectorAll('[required]').forEach(el => {
+  ['input','change'].forEach(evt => el.addEventListener(evt, () => {
+    const field = el.closest('.field');
+    if (el.value.trim()) field && field.classList.remove('has-error');
+  }));
+});
+
+// ── Submit ──
+document.getElementById('order-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const reqOk     = validateRequired();
+  const altMainOk = checkAltMainPhone();
+  const altLconOk = checkAltLconPhone();
+
+  if (!reqOk || !altMainOk || !altLconOk) {
+    const r = document.getElementById('form-result');
+    r.className = 'error';
+    r.textContent = 'Please fix the highlighted fields before submitting.';
+    document.querySelector('.has-error')?.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  const btn = this.querySelector('button[type="submit"]');
+  btn.textContent = 'Submitting…'; btn.disabled = true;
+
+  const result = document.getElementById('form-result');
+  try {
+    const res  = await fetch('https://api.web3forms.com/submit', { method:'POST', body: new FormData(this) });
+    const json = await res.json();
+    if (json.success) {
+      result.className = 'success';
+      result.textContent = "✓ Order received. We'll be in touch shortly to confirm next steps.";
+      this.reset();
+      applyParams();
+    } else {
+      throw new Error(json.message || 'Submission failed');
+    }
+  } catch(err) {
+    result.className = 'error';
+    result.textContent = '✗ Submission failed: ' + err.message + '. Please email us directly.';
+  } finally {
+    btn.textContent = 'Submit Order →'; btn.disabled = false;
+    result.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+});
+</script>
+</body>
+</html>
