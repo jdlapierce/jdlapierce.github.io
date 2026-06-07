@@ -1174,6 +1174,28 @@ function phonesMatch(a,b) {
 
 const params = new URLSearchParams(window.location.search);
 
+// ── Access token gate ──
+(function checkToken() {
+  if (params.get('token') === 'cx-secure-ord') return; // valid — proceed normally
+  // No valid token — hide the form and show an access message
+  document.querySelector('nav').style.display = 'none';
+  document.querySelector('.page-hero').style.display = 'none';
+  document.querySelector('.page-wrap').style.display = 'none';
+  document.getElementById('confirm-overlay').style.display = 'none';
+  document.body.style.background = '#f4f8fb';
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
+      <div style="background:#fff;border:1.5px solid #dde8f0;border-radius:14px;padding:48px 40px;max-width:480px;text-align:center;box-shadow:0 4px 24px rgba(0,174,239,0.10);">
+        <img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks" style="height:80px;width:auto;margin:0 auto 28px;">
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#0a1628;letter-spacing:-0.02em;margin-bottom:12px;">Link Not Valid</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:14px;color:#6b7899;line-height:1.7;margin-bottom:28px;">This order form requires a personalized link from Cirrux Networks. Please contact us to receive your link.</p>
+        <a href="mailto:info@cirruxnet.com" style="display:inline-block;background:#00AEEF;color:#fff;padding:12px 28px;border-radius:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:0.03em;">Contact Us →</a>
+        <div style="margin-top:16px;font-family:'DM Sans',sans-serif;font-size:13px;color:#6b7899;">(281) 397-3934</div>
+      </div>
+    </div>
+  `);
+})();
+
 const lockedMap = {
   site1_product: ['disp-product','hf-site1-product'],
   site1_router:  ['disp-router', 'hf-site1-router' ],
