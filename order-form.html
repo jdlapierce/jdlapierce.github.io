@@ -357,6 +357,92 @@
     box-shadow: 0 0 0 3px rgba(0,174,239,0.12);
   }
 
+  /* ── Extra site cards ── */
+  .extra-site-card {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .extra-site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .extra-site-title {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .btn-remove-site {
+    background: none;
+    border: 1.5px solid #fca5a5;
+    color: #dc2626;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-remove-site:hover { background: #fef2f2; }
+  .btn-add-site {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--ice);
+    border: 1.5px dashed rgba(0,174,239,0.4);
+    color: var(--blue-dk);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    width: 100%;
+    margin-bottom: 32px;
+  }
+  .btn-add-site:hover { background: #d4f0fb; border-color: var(--blue); }
+  .extra-site-subsection {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .extra-site-subsection-label {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  /* Per-extra-site router show/hide */
+  .extra-shipto {
+    transition: opacity 0.25s ease, max-height 0.35s ease, margin 0.25s ease;
+    max-height: 800px;
+    overflow: hidden;
+  }
+  .extra-shipto.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0 !important;
+    pointer-events: none;
+  }
+
   /* Submit */
   .submit-wrap {
     margin-top: 40px;
@@ -1043,6 +1129,10 @@
 
     </div>
 
+    <!-- Extra sites injected here by JS -->
+    <div id="extra-sites"></div>
+    <button type="button" class="btn-add-site" onclick="addExtraSite()">+ Add Another Site</button>
+
     <div class="submit-wrap">
       <p class="submit-note">Please review your information on the next screen before submitting.</p>
       <button type="button" id="btn-review">Review Order →</button>
@@ -1334,9 +1424,9 @@ function buildSummary() {
     ['Signer Phone',          v('[name="SignerPhone"]')],
   ]);
 
-  // 03 Service address
+  // 03 Service address (Site 1)
   html += `<div class="cs-section">
-    <div class="cs-section-title">Service Address</div>
+    <div class="cs-section-title">Site 1 — Service Address &amp; Order Details</div>
     <div class="cs-grid">
       <div class="cs-item" style="grid-column:span 2;">
         <div class="cs-label">Site Name</div>
@@ -1398,10 +1488,343 @@ function buildSummary() {
     </div>`;
   }
 
+  // Extra sites (2, 3, ...)
+  document.querySelectorAll('.extra-site-card').forEach(card => {
+    const n = parseInt(card.dataset.site);
+    const gi = id => { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+    const gn = name => { const e = card.querySelector(`[name="${name}"]`); return e ? e.value.trim() : ''; };
+
+    const siteRouterNo = gi(`es${n}-hf-router`).toLowerCase() === 'no';
+    const siteName = gn(`Site${n}_Name`);
+    const siteAddr = [
+      gn(`Site${n}_Address`),
+      [gn(`Site${n}_Suite`) ? 'Ste '+gn(`Site${n}_Suite`) : '', gn(`Site${n}_Floor`) ? 'Fl '+gn(`Site${n}_Floor`) : ''].filter(Boolean).join(', '),
+      [gn(`Site${n}_City`), gn(`Site${n}_State`), gn(`Site${n}_ZIP`)].filter(Boolean).join(', ')
+    ].filter(Boolean).join('<br>');
+
+    const siteShipAddr = [
+      gn(`Site${n}_ShipTo_Addr1`),
+      gn(`Site${n}_ShipTo_Addr2`),
+      [gn(`Site${n}_ShipTo_City`), gn(`Site${n}_ShipTo_State`), gn(`Site${n}_ShipTo_ZIP`)].filter(Boolean).join(', ')
+    ].filter(Boolean).join('<br>');
+
+    const mrcRaw = gn(`Site${n}_MRC`);
+    html += `<div class="cs-section">
+      <div class="cs-section-title">Site ${n} — ${siteName || 'Unnamed'}</div>
+      <div class="cs-grid" style="margin-bottom:12px;">
+        <div class="cs-item"><div class="cs-label">Product</div><div class="cs-value">${gn(`Site${n}_Product`)||gi(`es${n}-hf-product`)||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">Router Included</div><div class="cs-value">${gi(`es${n}-hf-router`)||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">Speed</div><div class="cs-value">${gn(`Site${n}_Speed`)||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">MRC</div><div class="cs-value">${mrcRaw?'$'+mrcRaw:'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">Handoff</div><div class="cs-value">${gn(`Site${n}_Handoff`)||'—'}</div></div>
+        <div class="cs-item" style="grid-column:span 2;"><div class="cs-label">Address</div><div class="cs-value">${siteAddr||'—'}</div></div>
+      </div>
+      <div class="cs-contacts">
+        ${contactCard('LCON', gi(`es${n}-lcon-name`), gi(`es${n}-lcon-email`), gi(`es${n}-lcon-phone`))}
+        ${contactCard('Alternate LCON', gi(`es${n}-alt-lcon-name`), gi(`es${n}-alt-lcon-email`), gi(`es${n}-alt-lcon-phone`))}
+        ${!siteRouterNo ? contactCard('Router Ship-to', gi(`es${n}-shipto-name`), gi(`es${n}-shipto-email`), gi(`es${n}-shipto-phone`)) : ''}
+      </div>
+      ${!siteRouterNo && siteShipAddr ? `<div style="margin-top:10px;"><div class="cs-label" style="font-size:10px;font-family:var(--display);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Ship-to Address</div><div style="font-size:13px;">${siteShipAddr}</div></div>` : ''}
+    </div>`;
+  });
+
   return html;
 }
 
-// ── Show / hide confirmation overlay ──
+// ── Extra sites ──
+let extraSiteCount = 0;
+const LOCK_SVG = `<svg viewBox="0 0 10 12" fill="none"><rect x="1.5" y="5" width="7" height="6" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>`;
+
+function buildExtraSiteHTML(n, sd) {
+  // sd = site data object from URL params (may be empty for manually added sites)
+  const addrLocked = !!(sd.addr || sd.city);
+  const orderLocked = !!(sd.product || sd.router || sd.speed || sd.mrc);
+  const lk = `<span class="lock-icon">${LOCK_SVG}</span>`;
+  const aCls = addrLocked ? 'field locked-field' : 'field';
+  const oCls = orderLocked ? 'field locked-field' : 'field';
+  const routerIsNo = (sd.router || '').toLowerCase() === 'no';
+
+  // Address fields
+  const addrF  = addrLocked ? `<input type="text" value="${sd.addr||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Address" value="${sd.addr||''}">` : `<input type="text" name="Site${n}_Address" placeholder="123 Main St" required><span class="field-error">Required.</span>`;
+  const suiteF = addrLocked ? `<input type="text" value="${sd.suite||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Suite" value="${sd.suite||''}">` : `<input type="text" name="Site${n}_Suite" placeholder="Ste 400">`;
+  const floorF = addrLocked ? `<input type="text" value="${sd.floor||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Floor" value="${sd.floor||''}">` : `<input type="text" name="Site${n}_Floor" placeholder="3">`;
+  const cityF  = addrLocked ? `<input type="text" value="${sd.city||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_City" value="${sd.city||''}">` : `<input type="text" name="Site${n}_City" required><span class="field-error">Required.</span>`;
+  const stateF = addrLocked ? `<input type="text" value="${sd.state||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_State" value="${sd.state||''}">` : `<input type="text" name="Site${n}_State" placeholder="TX" maxlength="2" required><span class="field-error">Required.</span>`;
+  const zipF   = addrLocked ? `<input type="text" value="${sd.zip||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_ZIP" value="${sd.zip||''}">` : `<input type="text" name="Site${n}_ZIP" placeholder="77479" required><span class="field-error">Required.</span>`;
+
+  // Order detail fields
+  const productF = orderLocked
+    ? `<input type="text" value="${sd.product||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Product" id="es${n}-hf-product" value="${sd.product||''}">`
+    : `<select name="Site${n}_Product" id="es${n}-hf-product" required><option value="">— Select —</option><option value="DIA">DIA</option><option value="MPLS">MPLS</option><option value="Ethernet">Ethernet</option><option value="SD-WAN">SD-WAN</option><option value="Broadband">Broadband</option><option value="Point-to-Point">Point-to-Point</option></select><span class="field-error">Required.</span>`;
+  const routerF = orderLocked
+    ? `<input type="text" value="${sd.router||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Router" id="es${n}-hf-router" value="${sd.router||''}">`
+    : `<select name="Site${n}_Router" id="es${n}-hf-router" onchange="updateExtraSiteRouter(${n})" required><option value="">— Select —</option><option value="Yes">Yes</option><option value="No">No</option></select><span class="field-error">Required.</span>`;
+  const speedF = orderLocked
+    ? `<input type="text" value="${sd.speed||'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_Speed" value="${sd.speed||''}">`
+    : `<input type="text" name="Site${n}_Speed" placeholder="e.g. 1Gbps" required><span class="field-error">Required.</span>`;
+  const mrcF = orderLocked
+    ? `<input type="text" value="${sd.mrc?'$'+sd.mrc:'—'}" readonly tabindex="-1"><input type="hidden" name="Site${n}_MRC" value="${sd.mrc||''}">`
+    : `<input type="text" name="Site${n}_MRC" placeholder="e.g. 1,500" required><span class="field-error">Required.</span>`;
+
+  return `
+  <div class="extra-site-card" id="extra-site-${n}" data-site="${n}">
+    <div class="extra-site-header">
+      <div class="extra-site-title">Site ${n}</div>
+      <button type="button" class="btn-remove-site" onclick="removeExtraSite(${n})">Remove Site</button>
+    </div>
+
+    <!-- Order Details -->
+    <div>
+      ${orderLocked ? `<div class="notice notice-blue" style="margin-bottom:14px;"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="6" x2="7" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4" r="0.7" fill="currentColor"/></svg>Order details pre-filled from your quote.</div>` : ''}
+      <div class="grid cols-4" style="margin-bottom:14px;">
+        <div class="${oCls}"><label>${orderLocked?lk:''}Product${orderLocked?'':'<span class="req">*</span>'}</label>${productF}</div>
+        <div class="${oCls}"><label>${orderLocked?lk:''}Router Included${orderLocked?'':'<span class="req">*</span>'}</label>${routerF}</div>
+        <div class="${oCls}"><label>${orderLocked?lk:''}Speed${orderLocked?'':'<span class="req">*</span>'}</label>${speedF}</div>
+        <div class="${oCls}"><label>${orderLocked?lk:''}MRC${orderLocked?'':'<span class="req">*</span>'}</label>${mrcF}</div>
+      </div>
+      <div class="grid cols-4" style="margin-bottom:20px;">
+        <div class="field">
+          <label>Handoff (from Ciena)<span class="req">*</span></label>
+          <select name="Site${n}_Handoff" required>
+            <option value="">— Select handoff type —</option>
+            <option value="1000BaseT">1000BaseT</option>
+            <option value="1G Single Mode">1G Single Mode</option>
+            <option value="1G Multimode">1G Multimode</option>
+            <option value="10G Single Mode">10G Single Mode</option>
+            <option value="10G Multimode">10G Multimode</option>
+          </select>
+          <span class="field-error">Required.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="extra-site-subsection">
+      <div class="extra-site-subsection-label">Service Address</div>
+      <div class="grid cols-4w" style="margin-bottom:14px;">
+        <div class="field col-span-2">
+          <label>Site Name<span class="req">*</span></label>
+          <input type="text" name="Site${n}_Name" value="${sd.name||''}" placeholder="e.g. Main Data Center" required>
+          <span class="field-error">Required.</span>
+        </div>
+      </div>
+      <div class="grid cols-addr">
+        <div class="${aCls} col-span-2"><label>${addrLocked?lk:''}Street Address${addrLocked?'':'<span class="req">*</span>'}</label>${addrF}</div>
+        <div class="${aCls}"><label>${addrLocked?lk:''}Suite</label>${suiteF}</div>
+        <div class="${aCls}"><label>${addrLocked?lk:''}Floor</label>${floorF}</div>
+      </div>
+      <div style="margin-top:14px;" class="grid cols-3">
+        <div class="${aCls}"><label>${addrLocked?lk:''}City${addrLocked?'':'<span class="req">*</span>'}</label>${cityF}</div>
+        <div class="${aCls}"><label>${addrLocked?lk:''}State${addrLocked?'':'<span class="req">*</span>'}</label>${stateF}</div>
+        <div class="${aCls}"><label>${addrLocked?lk:''}ZIP${addrLocked?'':'<span class="req">*</span>'}</label>${zipF}</div>
+      </div>
+    </div>
+
+    <!-- Location Contacts -->
+    <div class="extra-site-subsection">
+      <div class="extra-site-subsection-label">Location Contacts</div>
+      <div class="contact-card" style="margin-bottom:14px;">
+        <div class="card-label">Location Contact (LCON)</div>
+        <div class="copy-from-wrap"><label>Copy from</label>
+          <select class="copy-from-select" data-target-id="es${n}-lcon" onchange="copyToExtraSiteLcon(this,'es${n}','lcon')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
+        <div class="grid cols-3">
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Site${n}_LCON_Name" id="es${n}-lcon-name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Site${n}_LCON_Email" id="es${n}-lcon-email" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Phone<span class="req">*</span></label><input type="tel" name="Site${n}_LCON_Phone" id="es${n}-lcon-phone" placeholder="555-555-5555" required><span class="field-error">Required.</span></div>
+        </div>
+      </div>
+      <div class="contact-card" style="margin-bottom:0;">
+        <div class="card-label">Alternate Location Contact</div>
+        <div class="copy-from-wrap"><label>Copy from</label>
+          <select class="copy-from-select" data-target-id="es${n}-alt-lcon" onchange="copyToExtraSiteLcon(this,'es${n}','alt-lcon')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
+        <div class="grid cols-3">
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Site${n}_AltLCON_Name" id="es${n}-alt-lcon-name" required><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Site${n}_AltLCON_Email" id="es${n}-alt-lcon-email" required><span class="field-error">Required.</span></div>
+          <div class="field" id="es${n}-field-alt-lcon-phone">
+            <label>Phone<span class="req">*</span> <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from LCON)</span></label>
+            <input type="tel" name="Site${n}_AltLCON_Phone" id="es${n}-alt-lcon-phone" placeholder="555-555-5555" required>
+            <span class="field-error">Must be different from Location Contact phone.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Router Ship-to -->
+    <div class="extra-site-subsection extra-shipto${routerIsNo?' hidden':''}" id="es${n}-shipto">
+      <div class="extra-site-subsection-label">Router Ship-to</div>
+      <div class="contact-card" style="margin-bottom:14px;">
+        <div class="card-label">Router Ship-to Contact</div>
+        <div class="copy-from-wrap"><label>Copy from</label>
+          <select class="copy-from-select" onchange="copyToExtraSiteLcon(this,'es${n}','shipto')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
+        <div class="grid cols-3">
+          <div class="field"><label>Name<span class="req">*</span></label><input type="text" name="Site${n}_ShipTo_Name" id="es${n}-shipto-name" ${routerIsNo?'':'required'}><span class="field-error">Required.</span></div>
+          <div class="field"><label>Email<span class="req">*</span></label><input type="email" name="Site${n}_ShipTo_Email" id="es${n}-shipto-email" ${routerIsNo?'':'required'}><span class="field-error">Required.</span></div>
+          <div class="field"><label>Phone<span class="req">*</span></label><input type="tel" name="Site${n}_ShipTo_Phone" id="es${n}-shipto-phone" placeholder="555-555-5555" ${routerIsNo?'':'required'}><span class="field-error">Required.</span></div>
+        </div>
+      </div>
+      <div class="contact-card" style="margin-bottom:0;">
+        <div class="card-label">Router Ship-to Address <span class="optional-badge">if different from service address</span></div>
+        <div class="grid cols-addr">
+          <div class="field col-span-2"><label>Address Line 1</label><input type="text" name="Site${n}_ShipTo_Addr1"></div>
+          <div class="field"><label>Address Line 2</label><input type="text" name="Site${n}_ShipTo_Addr2"></div>
+        </div>
+        <div style="margin-top:14px;" class="grid cols-3">
+          <div class="field"><label>City</label><input type="text" name="Site${n}_ShipTo_City"></div>
+          <div class="field"><label>State</label><input type="text" name="Site${n}_ShipTo_State" placeholder="TX" maxlength="2"></div>
+          <div class="field"><label>ZIP</label><input type="text" name="Site${n}_ShipTo_ZIP" placeholder="77479"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>`;
+}
+
+function addExtraSite(sd) {
+  const data = sd || {name:'',addr:'',suite:'',floor:'',city:'',state:'',zip:'',product:'',router:'',speed:'',mrc:''};
+  extraSiteCount++;
+  const n = extraSiteCount + 1; // site 1 is static, so extra sites start at 2
+  document.getElementById('extra-sites').insertAdjacentHTML('beforeend', buildExtraSiteHTML(n, data));
+  // Phone uniqueness listener for this site
+  const lconPhone = document.getElementById(`es${n}-lcon-phone`);
+  const altPhone  = document.getElementById(`es${n}-alt-lcon-phone`);
+  if (lconPhone && altPhone) {
+    [lconPhone, altPhone].forEach(el => el.addEventListener('input', () => checkExtraSiteAltLcon(n)));
+  }
+  // Required field listeners
+  document.querySelectorAll(`#extra-site-${n} [required]`).forEach(el => {
+    ['input','change'].forEach(evt => el.addEventListener(evt, () => {
+      const f = el.closest('.field'); if (el.value.trim()) f && f.classList.remove('has-error');
+    }));
+  });
+  // Populate copy-from dropdowns for this site
+  refreshExtraSiteCopyDropdowns(n);
+}
+
+function removeExtraSite(n) {
+  const el = document.getElementById(`extra-site-${n}`);
+  if (el) el.remove();
+}
+
+function updateExtraSiteRouter(n) {
+  const hf = document.getElementById(`es${n}-hf-router`);
+  if (!hf) return;
+  const isNo = hf.value.toLowerCase() === 'no';
+  const section = document.getElementById(`es${n}-shipto`);
+  if (!section) return;
+  section.classList.toggle('hidden', isNo);
+  ['es${n}-shipto-name','es${n}-shipto-email','es${n}-shipto-phone'].forEach(id => {
+    const el = document.getElementById(id.replace('${n}', n));
+    if (el) el.required = !isNo;
+  });
+}
+
+function checkExtraSiteAltLcon(n) {
+  const field    = document.getElementById(`es${n}-field-alt-lcon-phone`);
+  const lconVal  = (document.getElementById(`es${n}-lcon-phone`)     || {}).value || '';
+  const altVal   = (document.getElementById(`es${n}-alt-lcon-phone`) || {}).value || '';
+  if (!field) return true;
+  if (altVal && phonesMatch(altVal, lconVal)) { field.classList.add('has-error'); return false; }
+  field.classList.remove('has-error'); return true;
+}
+
+// Populate copy-from dropdowns inside an extra site card
+function refreshExtraSiteCopyDropdowns(n) {
+  const card = document.getElementById(`extra-site-${n}`);
+  if (!card) return;
+  // Build the full source list: all CONTACTS + site 1 lcon/alt-lcon + other extra sites' lcons
+  const sources = [];
+  CONTACTS.forEach(c => {
+    const def = CONTACTS.find(x => x.key === c.key);
+    if (!def) return;
+    const el = document.querySelector(def.nameField);
+    const name = el ? el.value.trim() : '';
+    if (name) sources.push({ label: `${c.label} (${name})`, key: `contact:${c.key}` });
+  });
+  // Site 1 LCON
+  const s1lcon = document.getElementById('lcon-phone');
+  const s1lconName = document.querySelector('[data-contact="lcon"][data-field="name"]');
+  if (s1lconName && s1lconName.value.trim()) sources.push({ label: `Site 1 LCON (${s1lconName.value.trim()})`, key: 'site1:lcon' });
+  const s1altName = document.querySelector('[data-contact="alt-lcon"][data-field="name"]');
+  if (s1altName && s1altName.value.trim()) sources.push({ label: `Site 1 Alt LCON (${s1altName.value.trim()})`, key: 'site1:alt-lcon' });
+
+  card.querySelectorAll('.copy-from-select').forEach(sel => {
+    const targetId = sel.dataset.targetId || '';
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— select a contact to copy —</option>';
+    sources.forEach(s => {
+      // Don't let Alt LCON copy from its own site's LCON
+      if (targetId.includes('alt-lcon') && s.key === `site${n}:lcon`) return;
+      const opt = document.createElement('option');
+      opt.value = s.key; opt.textContent = s.label;
+      sel.appendChild(opt);
+    });
+    if (cur && sel.querySelector(`option[value="${cur}"]`)) sel.value = cur;
+  });
+}
+
+function copyToExtraSiteLcon(sel, prefix, target) {
+  const key = sel.value; if (!key) return;
+  let name = '', email = '', phone = '';
+
+  if (key.startsWith('contact:')) {
+    const contactKey = key.replace('contact:', '');
+    const def = CONTACTS.find(c => c.key === contactKey);
+    if (def) {
+      name  = (document.querySelector(def.nameField)  || {}).value || '';
+      email = (document.querySelector(def.emailField) || {}).value || '';
+      phone = (document.querySelector(def.phoneField) || {}).value || '';
+    }
+  } else if (key === 'site1:lcon') {
+    name  = (document.querySelector('[data-contact="lcon"][data-field="name"]')  || {}).value || '';
+    email = (document.querySelector('[data-contact="lcon"][data-field="email"]') || {}).value || '';
+    phone = (document.getElementById('lcon-phone') || {}).value || '';
+  } else if (key === 'site1:alt-lcon') {
+    name  = (document.querySelector('[data-contact="alt-lcon"][data-field="name"]')  || {}).value || '';
+    email = (document.querySelector('[data-contact="alt-lcon"][data-field="email"]') || {}).value || '';
+    phone = (document.getElementById('alt-lcon-phone') || {}).value || '';
+  }
+
+  const setField = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) { el.value = val; el.dispatchEvent(new Event('input')); }
+  };
+  setField(`${prefix}-${target}-name`,  name);
+  setField(`${prefix}-${target}-email`, email);
+  setField(`${prefix}-${target}-phone`, phone);
+  sel.value = '';
+}
+
+// Init extra sites from URL params (site2_, site3_, etc.)
+(function initExtraSites() {
+  let i = 2;
+  while (params.get(`site${i}_addr`) || params.get(`site${i}_city`) || params.get(`site${i}_product`)) {
+    addExtraSite({
+      name:    params.get(`site${i}_name`)    || '',
+      addr:    params.get(`site${i}_addr`)    || '',
+      suite:   params.get(`site${i}_suite`)   || '',
+      floor:   params.get(`site${i}_floor`)   || '',
+      city:    params.get(`site${i}_city`)    || '',
+      state:   params.get(`site${i}_state`)   || '',
+      zip:     params.get(`site${i}_zip`)     || '',
+      product: params.get(`site${i}_product`) || '',
+      router:  params.get(`site${i}_router`)  || '',
+      speed:   params.get(`site${i}_speed`)   || '',
+      mrc:     params.get(`site${i}_mrc`)     || '',
+    });
+    i++;
+  }
+})();
+
+
 function showConfirm() {
   document.getElementById('confirm-content').innerHTML = buildSummary();
   document.getElementById('confirm-result').className = '';
