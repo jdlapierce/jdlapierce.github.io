@@ -57,7 +57,7 @@
     margin: 0 auto;
     padding: 0 28px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     width: 100%;
   }
@@ -75,25 +75,6 @@
     width: auto;
     height: auto;
     display: block;
-  }
-
-  /* Right col: always pinned right, never moves whether logo present or not */
-  .nav-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 2px;
-  }
-  .nav-right .nav-site {
-    font-family: var(--display);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--navy);
-  }
-  .nav-right .nav-sub {
-    font-size: 12px;
-    color: var(--muted);
   }
 
   /* ── Page hero ── */
@@ -456,6 +437,210 @@
     .cols-2, .cols-3, .cols-4, .cols-4w, .cols-addr { grid-template-columns: 1fr; }
     .col-span-2, .col-span-3, .col-span-4 { grid-column: span 1; }
   }
+  #btn-review {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 13px 36px;
+    border-radius: 8px;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    box-shadow: 0 4px 20px rgba(0,174,239,0.38);
+  }
+  #btn-review:hover { background: var(--blue-dk); transform: translateY(-1px); }
+  #btn-review:active { transform: translateY(0); }
+
+
+  #confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,22,40,0.55);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 40px 16px 60px;
+  }
+  #confirm-overlay.visible { display: block; }
+
+  #confirm-panel {
+    background: var(--white);
+    border-radius: 14px;
+    max-width: 860px;
+    margin: 0 auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+    overflow: hidden;
+  }
+
+  #confirm-header {
+    background: var(--navy);
+    padding: 28px 32px;
+  }
+  #confirm-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  #confirm-title {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  #confirm-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 4px;
+  }
+  #btn-back {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+    padding: 9px 20px;
+    border-radius: 7px;
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  #btn-back:hover { background: rgba(255,255,255,0.18); }
+
+  #confirm-body { padding: 32px; }
+
+  /* Summary sections */
+  .cs-section { margin-bottom: 28px; }
+  .cs-section-title {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .cs-section-title::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--blue);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Detail rows */
+  .cs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px 24px;
+  }
+  .cs-item { display: flex; flex-direction: column; gap: 2px; }
+  .cs-label {
+    font-family: var(--display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cs-value {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .cs-value.empty { color: #b0bdd4; font-style: italic; font-weight: 400; }
+
+  /* Contact summary cards */
+  .cs-contacts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .cs-contacts { grid-template-columns: 1fr; } }
+  .cs-contact-card {
+    background: var(--gray);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .cs-contact-title {
+    font-family: var(--display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .cs-contact-row {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .cs-contact-row .dim { color: var(--muted); font-size: 12px; }
+
+  /* Confirm actions */
+  #confirm-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px solid var(--border);
+  }
+  #btn-edit-confirm {
+    background: var(--gray);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  #btn-edit-confirm:hover { background: #e4eaf2; color: var(--navy); }
+  #btn-submit-confirm {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 13px 36px;
+    border-radius: 8px;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 0 4px 20px rgba(0,174,239,0.38);
+  }
+  #btn-submit-confirm:hover { background: var(--blue-dk); transform: translateY(-1px); }
+  #btn-submit-confirm:active { transform: translateY(0); }
+  #btn-submit-confirm:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  #confirm-result {
+    margin-top: 20px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+  }
+  #confirm-result.success {
+    background: #edfaf3; border: 1.5px solid #7ddaa8; color: #1a6b42; display: block;
+  }
+  #confirm-result.error {
+    background: #fef2f2; border: 1.5px solid #fca5a5; color: #991b1b; display: block;
+  }
 </style>
 </head>
 <body>
@@ -469,10 +654,6 @@
     <!-- Customer logo — centered, shown only when ?customerlogo= param present -->
     <div class="nav-customer" id="nav-customer">
       <img src="" alt="Customer" id="nav-customer-img">
-    </div>
-    <div class="nav-right">
-      <span class="nav-site">Service Order Form</span>
-      <span class="nav-sub">cirruxnet.com</span>
     </div>
   </div>
 </nav>
@@ -672,19 +853,21 @@
 
       <!-- Alternate Main Order Contact -->
       <div class="contact-card">
-        <div class="card-label">Alternate Order Contact <span class="optional-badge">optional</span></div>
+        <div class="card-label">Alternate Order Contact</div>
         <div class="grid cols-3">
           <div class="field">
-            <label>Name</label>
-            <input type="text" name="AltContact_Name" data-contact="alt-main" data-field="name">
+            <label>Name<span class="req">*</span></label>
+            <input type="text" name="AltContact_Name" data-contact="alt-main" data-field="name" required>
+            <span class="field-error">Required.</span>
           </div>
           <div class="field">
-            <label>Email</label>
-            <input type="email" name="AltContact_Email" data-contact="alt-main" data-field="email">
+            <label>Email<span class="req">*</span></label>
+            <input type="email" name="AltContact_Email" data-contact="alt-main" data-field="email" required>
+            <span class="field-error">Required.</span>
           </div>
           <div class="field" id="field-alt-main-phone">
-            <label>Phone <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from Main)</span></label>
-            <input type="tel" name="AltContact_Phone" id="alt-main-phone" data-contact="alt-main" data-field="phone" placeholder="555-555-5555">
+            <label>Phone<span class="req">*</span> <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from Main)</span></label>
+            <input type="tel" name="AltContact_Phone" id="alt-main-phone" data-contact="alt-main" data-field="phone" placeholder="555-555-5555" required>
             <span class="field-error">Must be different from the Main Order Contact phone.</span>
           </div>
         </div>
@@ -720,7 +903,7 @@
 
       <!-- Alternate LCON -->
       <div class="contact-card">
-        <div class="card-label">Alternate Location Contact <span class="optional-badge">optional</span></div>
+        <div class="card-label">Alternate Location Contact</div>
         <div class="copy-from-wrap">
           <label>Copy from</label>
           <select class="copy-from-select" data-exclude="lcon" onchange="copyContact(this,'alt-lcon')">
@@ -729,16 +912,18 @@
         </div>
         <div class="grid cols-3">
           <div class="field">
-            <label>Name</label>
-            <input type="text" name="AltLCON_Name" data-contact="alt-lcon" data-field="name">
+            <label>Name<span class="req">*</span></label>
+            <input type="text" name="AltLCON_Name" data-contact="alt-lcon" data-field="name" required>
+            <span class="field-error">Required.</span>
           </div>
           <div class="field">
-            <label>Email</label>
-            <input type="email" name="AltLCON_Email" data-contact="alt-lcon" data-field="email">
+            <label>Email<span class="req">*</span></label>
+            <input type="email" name="AltLCON_Email" data-contact="alt-lcon" data-field="email" required>
+            <span class="field-error">Required.</span>
           </div>
           <div class="field" id="field-alt-lcon-phone">
-            <label>Phone <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from LCON)</span></label>
-            <input type="tel" name="AltLCON_Phone" id="alt-lcon-phone" data-contact="alt-lcon" data-field="phone" placeholder="555-555-5555">
+            <label>Phone<span class="req">*</span> <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from LCON)</span></label>
+            <input type="tel" name="AltLCON_Phone" id="alt-lcon-phone" data-contact="alt-lcon" data-field="phone" placeholder="555-555-5555" required>
             <span class="field-error">Must be different from the Location Contact phone.</span>
           </div>
         </div>
@@ -859,14 +1044,37 @@
     </div><!-- /contacts -->
 
     <div class="submit-wrap">
-      <p class="submit-note">By submitting this form you authorize Cirrux Networks to proceed with the service order as described above.</p>
-      <button type="submit">Submit Order →</button>
+      <p class="submit-note">Please review your information on the next screen before submitting.</p>
+      <button type="button" id="btn-review">Review Order →</button>
     </div>
 
     <div id="form-result"></div>
 
   </form>
 </div><!-- /page-wrap -->
+
+<!-- ── Confirmation overlay ── -->
+<div id="confirm-overlay">
+  <div id="confirm-panel">
+    <div id="confirm-header">
+      <div id="confirm-header-inner">
+        <div>
+          <div id="confirm-title">Review Your Order</div>
+          <div id="confirm-subtitle">Please verify everything below before submitting.</div>
+        </div>
+        <button id="btn-back" onclick="hideConfirm()">← Edit</button>
+      </div>
+    </div>
+    <div id="confirm-body">
+      <div id="confirm-content"></div>
+      <div id="confirm-actions">
+        <button id="btn-edit-confirm" onclick="hideConfirm()">← Go Back &amp; Edit</button>
+        <button id="btn-submit-confirm" onclick="submitOrder()">Confirm &amp; Submit →</button>
+      </div>
+      <div id="confirm-result"></div>
+    </div>
+  </div>
+</div>
 
 <script>
 function normalizePhone(v) { return v.replace(/\D/g,''); }
@@ -911,28 +1119,21 @@ function applyParams() {
     const el = document.getElementById(elId);
     if (el && val) el.value = val;
   }
-
   const logoFile     = params.get('customerlogo') || '';
   const customerName = params.get('customername') || '';
-
   if (logoFile) {
     const src = logoFile.startsWith('http') ? logoFile : '/logos/' + logoFile;
     const navWrap = document.getElementById('nav-customer');
     const navImg  = document.getElementById('nav-customer-img');
-    navImg.src = src;
-    navImg.alt = customerName || 'Customer';
+    navImg.src = src; navImg.alt = customerName || 'Customer';
     navWrap.classList.add('visible');
   }
-
   if (customerName) {
     const hf = document.getElementById('hf-customername');
     if (hf) hf.value = customerName;
     const badge = document.getElementById('hero-customer-badge');
     const wrap  = document.getElementById('hero-customer');
-    if (badge && wrap) {
-      badge.textContent = 'Prepared for ' + customerName;
-      wrap.classList.add('visible');
-    }
+    if (badge && wrap) { badge.textContent = 'Prepared for ' + customerName; wrap.classList.add('visible'); }
   }
 }
 applyParams();
@@ -941,29 +1142,22 @@ applyParams();
 function updateRouterSections() {
   const routerVal = document.getElementById('hf-router').value.trim().toLowerCase();
   const isNo = routerVal === 'no';
-  document.querySelectorAll('.router-section').forEach(el => {
-    el.classList.toggle('router-hidden', isNo);
-  });
-  // Enable/disable required on ship-to fields so they don't block submission when hidden
-  document.querySelectorAll('[data-router-required]').forEach(el => {
-    el.required = !isNo;
-  });
+  document.querySelectorAll('.router-section').forEach(el => el.classList.toggle('router-hidden', isNo));
+  document.querySelectorAll('[data-router-required]').forEach(el => { el.required = !isNo; });
 }
 updateRouterSections();
 
 // ── Copy-from system ──
-// Define all contacts in order, with their display label and field name prefixes
 const CONTACTS = [
-  { key: 'main',     label: 'Main Order Contact',        nameField: '[name="MainContact_Name"]',  emailField: '[name="MainContact_Email"]',  phoneField: '#main-phone' },
-  { key: 'alt-main', label: 'Alternate Order Contact',   nameField: '[data-contact="alt-main"][data-field="name"]', emailField: '[data-contact="alt-main"][data-field="email"]', phoneField: '[data-contact="alt-main"][data-field="phone"]' },
-  { key: 'lcon',     label: 'Location Contact (LCON)',   nameField: '[data-contact="lcon"][data-field="name"]',     emailField: '[data-contact="lcon"][data-field="email"]',     phoneField: '#lcon-phone' },
-  { key: 'alt-lcon', label: 'Alternate Location Contact',nameField: '[data-contact="alt-lcon"][data-field="name"]', emailField: '[data-contact="alt-lcon"][data-field="email"]', phoneField: '[data-contact="alt-lcon"][data-field="phone"]' },
-  { key: 'tech',     label: 'Technical Contact',         nameField: '[data-contact="tech"][data-field="name"]',     emailField: '[data-contact="tech"][data-field="email"]',     phoneField: '[data-contact="tech"][data-field="phone"]' },
-  { key: 'shipto',   label: 'Router Ship-to Contact',    nameField: '[data-contact="shipto"][data-field="name"]',   emailField: '[data-contact="shipto"][data-field="email"]',   phoneField: '[data-contact="shipto"][data-field="phone"]' },
-  { key: 'billing',  label: 'Billing Contact',           nameField: '[data-contact="billing"][data-field="name"]',  emailField: '[data-contact="billing"][data-field="email"]',  phoneField: '[data-contact="billing"][data-field="phone"]' },
+  { key: 'main',     label: 'Main Order Contact',         nameField: '[name="MainContact_Name"]',  emailField: '[name="MainContact_Email"]',  phoneField: '#main-phone' },
+  { key: 'alt-main', label: 'Alternate Order Contact',    nameField: '[data-contact="alt-main"][data-field="name"]', emailField: '[data-contact="alt-main"][data-field="email"]', phoneField: '[data-contact="alt-main"][data-field="phone"]' },
+  { key: 'lcon',     label: 'Location Contact (LCON)',    nameField: '[data-contact="lcon"][data-field="name"]',     emailField: '[data-contact="lcon"][data-field="email"]',     phoneField: '#lcon-phone' },
+  { key: 'alt-lcon', label: 'Alternate Location Contact', nameField: '[data-contact="alt-lcon"][data-field="name"]', emailField: '[data-contact="alt-lcon"][data-field="email"]', phoneField: '[data-contact="alt-lcon"][data-field="phone"]' },
+  { key: 'tech',     label: 'Technical Contact',          nameField: '[data-contact="tech"][data-field="name"]',     emailField: '[data-contact="tech"][data-field="email"]',     phoneField: '[data-contact="tech"][data-field="phone"]' },
+  { key: 'shipto',   label: 'Router Ship-to Contact',     nameField: '[data-contact="shipto"][data-field="name"]',   emailField: '[data-contact="shipto"][data-field="email"]',   phoneField: '[data-contact="shipto"][data-field="phone"]' },
+  { key: 'billing',  label: 'Billing Contact',            nameField: '[data-contact="billing"][data-field="name"]',  emailField: '[data-contact="billing"][data-field="email"]',  phoneField: '[data-contact="billing"][data-field="phone"]' },
 ];
 
-// Get current values for a contact by key
 function getContactData(key) {
   const def = CONTACTS.find(c => c.key === key);
   if (!def) return null;
@@ -977,18 +1171,12 @@ function getContactData(key) {
   };
 }
 
-// Rebuild all copy-from dropdowns — called whenever any contact field changes
 function refreshCopyDropdowns() {
   document.querySelectorAll('.copy-from-select').forEach(select => {
     const targetKey  = select.getAttribute('onchange').match(/'([^']+)'\)/)[1];
     const targetIdx  = CONTACTS.findIndex(c => c.key === targetKey);
     const excludeKey = select.dataset.exclude || null;
-
-    // Remember current selection
     const currentVal = select.value;
-
-    // Rebuild options — only contacts ABOVE this one that have a name,
-    // and not matching the exclude key
     select.innerHTML = '<option value="">— select a contact to copy —</option>';
     for (let i = 0; i < targetIdx; i++) {
       const c = CONTACTS[i];
@@ -1001,50 +1189,33 @@ function refreshCopyDropdowns() {
         select.appendChild(opt);
       }
     }
-
-    // Restore selection if still valid
-    if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) {
-      select.value = currentVal;
-    }
+    if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) select.value = currentVal;
   });
 }
 
-// Copy data from source contact into target contact fields
 function copyContact(selectEl, targetKey) {
   const sourceKey = selectEl.value;
   if (!sourceKey) return;
-
   const sourceData = getContactData(sourceKey);
   if (!sourceData) return;
-
   const targetDef = CONTACTS.find(c => c.key === targetKey);
   if (!targetDef) return;
-
   const nameEl  = document.querySelector(targetDef.nameField);
   const emailEl = document.querySelector(targetDef.emailField);
   const phoneEl = document.querySelector(targetDef.phoneField);
-
   if (nameEl)  { nameEl.value  = sourceData.name;  nameEl.dispatchEvent(new Event('input'));  }
   if (emailEl) { emailEl.value = sourceData.email; emailEl.dispatchEvent(new Event('input')); }
   if (phoneEl) { phoneEl.value = sourceData.phone; phoneEl.dispatchEvent(new Event('input')); }
-
-  // Reset dropdown back to placeholder after copying
   selectEl.value = '';
-
-  // Re-run phone uniqueness checks in case copied phone matches
-  checkAltMainPhone();
-  checkAltLconPhone();
+  checkAltMainPhone(); checkAltLconPhone();
 }
 
-// Attach listeners to all contact name/email/phone fields to refresh dropdowns on change
 CONTACTS.forEach(c => {
   [c.nameField, c.emailField, c.phoneField].forEach(selector => {
     const el = document.querySelector(selector);
     if (el) el.addEventListener('input', refreshCopyDropdowns);
   });
 });
-
-// Initial build
 refreshCopyDropdowns();
 
 // ── Duplicate phone checks ──
@@ -1082,32 +1253,208 @@ document.querySelectorAll('[required]').forEach(el => {
   }));
 });
 
-// ── Submit ──
-document.getElementById('order-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
+// ── Helpers ──
+function v(selector) {
+  const el = document.querySelector(selector);
+  return el ? el.value.trim() : '';
+}
+function fv(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+// ── Build confirmation summary ──
+function buildSummary() {
+  const routerNo = fv('hf-router').toLowerCase() === 'no';
+
+  // Helper to create a summary section
+  function section(title, rows) {
+    const items = rows.filter(r => r).map(([label, val]) => {
+      const empty = !val;
+      return `<div class="cs-item">
+        <div class="cs-label">${label}</div>
+        <div class="cs-value${empty ? ' empty' : ''}">${val || '—'}</div>
+      </div>`;
+    }).join('');
+    return `<div class="cs-section">
+      <div class="cs-section-title">${title}</div>
+      <div class="cs-grid">${items}</div>
+    </div>`;
+  }
+
+  // Helper to build a contact card for the summary
+  function contactCard(title, name, email, phone) {
+    return `<div class="cs-contact-card">
+      <div class="cs-contact-title">${title}</div>
+      <div class="cs-contact-row"><strong>${name || '—'}</strong></div>
+      <div class="cs-contact-row dim">${email || '—'}</div>
+      <div class="cs-contact-row dim">${phone || '—'}</div>
+    </div>`;
+  }
+
+  // Address parts
+  const addrParts = [
+    fv('hf-addr'),
+    [fv('hf-suite') ? 'Ste ' + fv('hf-suite') : '', fv('hf-floor') ? 'Fl ' + fv('hf-floor') : ''].filter(Boolean).join(', '),
+    [fv('hf-city'), fv('hf-state'), fv('hf-zip')].filter(Boolean).join(', ')
+  ].filter(Boolean).join('<br>');
+
+  // Ship-to address
+  const shipAddrParts = [
+    v('[name="ShipTo_Addr1"]'),
+    v('[name="ShipTo_Addr2"]'),
+    [v('[name="ShipTo_City"]'), v('[name="ShipTo_State"]'), v('[name="ShipTo_ZIP"]')].filter(Boolean).join(', ')
+  ].filter(Boolean).join('<br>');
+
+  // Billing address
+  const billAddrParts = [
+    v('[name="Billing_Addr1"]'),
+    v('[name="Billing_Addr2"]'),
+    [v('[name="Billing_City"]'), v('[name="Billing_State"]'), v('[name="Billing_ZIP"]')].filter(Boolean).join(', ')
+  ].filter(Boolean).join('<br>');
+
+  let html = '';
+
+  // 01 Order details
+  html += section('Order Details', [
+    ['Product',         fv('hf-product')],
+    ['Router Included', fv('hf-router')],
+    ['Speed',           fv('hf-speed')],
+    ['MRC',             fv('hf-mrc') ? '$' + fv('hf-mrc') : ''],
+    ['Handoff',         v('#handoff')],
+  ]);
+
+  // 02 Contract details
+  html += section('Contract Details', [
+    ['Official Company Name', v('[name="OfficialCompanyName"]')],
+    ['Signer Name',           v('[name="SignerName"]')],
+    ['Signer Title',          v('[name="SignerTitle"]')],
+    ['Signer Email',          v('[name="SignerEmail"]')],
+  ]);
+
+  // 03 Service address
+  html += `<div class="cs-section">
+    <div class="cs-section-title">Service Address</div>
+    <div class="cs-grid">
+      <div class="cs-item" style="grid-column:span 2;">
+        <div class="cs-label">Site Name</div>
+        <div class="cs-value">${v('[name="SiteName"]') || '—'}</div>
+      </div>
+      <div class="cs-item" style="grid-column:span 2;">
+        <div class="cs-label">Address</div>
+        <div class="cs-value">${addrParts || '—'}</div>
+      </div>
+    </div>
+  </div>`;
+
+  // 04 Contacts
+  const contactsHtml = [
+    contactCard('Main Order Contact',
+      v('[name="MainContact_Name"]'), v('[name="MainContact_Email"]'), fv('main-phone')),
+    contactCard('Alternate Order Contact',
+      v('[name="AltContact_Name"]'), v('[name="AltContact_Email"]'), fv('alt-main-phone')),
+    contactCard('Location Contact (LCON)',
+      v('[data-contact="lcon"][data-field="name"]'), v('[data-contact="lcon"][data-field="email"]'), fv('lcon-phone')),
+    contactCard('Alternate Location Contact',
+      v('[data-contact="alt-lcon"][data-field="name"]'), v('[data-contact="alt-lcon"][data-field="email"]'), fv('alt-lcon-phone')),
+    contactCard('Technical Contact',
+      v('[data-contact="tech"][data-field="name"]'), v('[data-contact="tech"][data-field="email"]'), v('[data-contact="tech"][data-field="phone"]')),
+    !routerNo ? contactCard('Router Ship-to Contact',
+      v('[data-contact="shipto"][data-field="name"]'), v('[data-contact="shipto"][data-field="email"]'), v('[data-contact="shipto"][data-field="phone"]')) : '',
+    contactCard('Billing Contact',
+      v('[data-contact="billing"][data-field="name"]'), v('[data-contact="billing"][data-field="email"]'), v('[data-contact="billing"][data-field="phone"]')),
+  ].join('');
+
+  html += `<div class="cs-section">
+    <div class="cs-section-title">Contacts</div>
+    <div class="cs-contacts">${contactsHtml}</div>
+  </div>`;
+
+  // Ship-to address (if router = yes and address filled)
+  if (!routerNo && shipAddrParts) {
+    html += `<div class="cs-section">
+      <div class="cs-section-title">Router Ship-to Address</div>
+      <div class="cs-grid">
+        <div class="cs-item" style="grid-column:span 2;">
+          <div class="cs-label">Address</div>
+          <div class="cs-value">${shipAddrParts}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Billing address (if filled)
+  if (billAddrParts) {
+    html += `<div class="cs-section">
+      <div class="cs-section-title">Billing Address</div>
+      <div class="cs-grid">
+        <div class="cs-item" style="grid-column:span 2;">
+          <div class="cs-label">Address</div>
+          <div class="cs-value">${billAddrParts}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  return html;
+}
+
+// ── Show / hide confirmation overlay ──
+function showConfirm() {
+  document.getElementById('confirm-content').innerHTML = buildSummary();
+  document.getElementById('confirm-result').className = '';
+  document.getElementById('confirm-result').style.display = 'none';
+  const btn = document.getElementById('btn-submit-confirm');
+  btn.textContent = 'Confirm & Submit →'; btn.disabled = false;
+  const overlay = document.getElementById('confirm-overlay');
+  overlay.classList.add('visible');
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function hideConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// Review button click
+document.getElementById('btn-review').addEventListener('click', function() {
   const reqOk     = validateRequired();
   const altMainOk = checkAltMainPhone();
   const altLconOk = checkAltLconPhone();
-
   if (!reqOk || !altMainOk || !altLconOk) {
     const r = document.getElementById('form-result');
     r.className = 'error';
-    r.textContent = 'Please fix the highlighted fields before submitting.';
+    r.textContent = 'Please fix the highlighted fields before reviewing.';
     document.querySelector('.has-error')?.scrollIntoView({ behavior:'smooth', block:'center' });
     return;
   }
+  document.getElementById('form-result').className = '';
+  document.getElementById('form-result').textContent = '';
+  showConfirm();
+});
 
-  const btn = this.querySelector('button[type="submit"]');
+// ── Actual submission from confirm screen ──
+async function submitOrder() {
+  const btn = document.getElementById('btn-submit-confirm');
   btn.textContent = 'Submitting…'; btn.disabled = true;
 
-  const result = document.getElementById('form-result');
+  const result = document.getElementById('confirm-result');
+  result.style.display = 'none';
+
+  const formData = new FormData(document.getElementById('order-form'));
+
   try {
-    const res  = await fetch('https://api.web3forms.com/submit', { method:'POST', body: new FormData(this) });
+    const res  = await fetch('https://api.web3forms.com/submit', { method:'POST', body: formData });
     const json = await res.json();
     if (json.success) {
       result.className = 'success';
+      result.style.display = 'block';
       result.textContent = "✓ Order received. We'll be in touch shortly to confirm next steps.";
-      this.reset();
+      // Hide the action buttons after success
+      document.getElementById('confirm-actions').style.display = 'none';
+      // Reset the form in background
+      document.getElementById('order-form').reset();
       applyParams();
       refreshCopyDropdowns();
     } else {
@@ -1115,12 +1462,11 @@ document.getElementById('order-form').addEventListener('submit', async function(
     }
   } catch(err) {
     result.className = 'error';
+    result.style.display = 'block';
     result.textContent = '✗ Submission failed: ' + err.message + '. Please email us directly.';
-  } finally {
-    btn.textContent = 'Submit Order →'; btn.disabled = false;
-    result.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    btn.textContent = 'Confirm & Submit →'; btn.disabled = false;
   }
-});
+}
 </script>
 </body>
 </html>
