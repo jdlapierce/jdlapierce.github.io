@@ -320,6 +320,62 @@
     letter-spacing: 0;
   }
 
+  /* ── Router section show/hide ── */
+  .router-section {
+    transition: opacity 0.25s ease, transform 0.25s ease, margin 0.25s ease, padding 0.25s ease, max-height 0.35s ease;
+    max-height: 600px;
+    overflow: hidden;
+  }
+  .router-section.router-hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+  }
+
+  /* ── Copy-from dropdown ── */
+  .copy-from-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .copy-from-wrap label {
+    font-family: var(--display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    margin: 0;
+  }
+  .copy-from-select {
+    flex: 1;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 13px;
+    padding: 6px 28px 6px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .copy-from-select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0,174,239,0.12);
+  }
+
   /* Submit */
   .submit-wrap {
     margin-top: 40px;
@@ -620,15 +676,15 @@
         <div class="grid cols-3">
           <div class="field">
             <label>Name</label>
-            <input type="text" name="AltContact_Name">
+            <input type="text" name="AltContact_Name" data-contact="alt-main" data-field="name">
           </div>
           <div class="field">
             <label>Email</label>
-            <input type="email" name="AltContact_Email">
+            <input type="email" name="AltContact_Email" data-contact="alt-main" data-field="email">
           </div>
           <div class="field" id="field-alt-main-phone">
             <label>Phone <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from Main)</span></label>
-            <input type="tel" name="AltContact_Phone" id="alt-main-phone" placeholder="555-555-5555">
+            <input type="tel" name="AltContact_Phone" id="alt-main-phone" data-contact="alt-main" data-field="phone" placeholder="555-555-5555">
             <span class="field-error">Must be different from the Main Order Contact phone.</span>
           </div>
         </div>
@@ -637,20 +693,26 @@
       <!-- Location Contact (LCON) -->
       <div class="contact-card">
         <div class="card-label">Location Contact (LCON)</div>
+        <div class="copy-from-wrap">
+          <label>Copy from</label>
+          <select class="copy-from-select" onchange="copyContact(this,'lcon')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
         <div class="grid cols-3">
           <div class="field">
             <label>Name<span class="req">*</span></label>
-            <input type="text" name="LCON_Name" required>
+            <input type="text" name="LCON_Name" data-contact="lcon" data-field="name" required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Email<span class="req">*</span></label>
-            <input type="email" name="LCON_Email" required>
+            <input type="email" name="LCON_Email" data-contact="lcon" data-field="email" required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="LCON_Phone" id="lcon-phone" placeholder="555-555-5555" required>
+            <input type="tel" name="LCON_Phone" id="lcon-phone" data-contact="lcon" data-field="phone" placeholder="555-555-5555" required>
             <span class="field-error">Required.</span>
           </div>
         </div>
@@ -659,18 +721,24 @@
       <!-- Alternate LCON -->
       <div class="contact-card">
         <div class="card-label">Alternate Location Contact <span class="optional-badge">optional</span></div>
+        <div class="copy-from-wrap">
+          <label>Copy from</label>
+          <select class="copy-from-select" data-exclude="lcon" onchange="copyContact(this,'alt-lcon')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
         <div class="grid cols-3">
           <div class="field">
             <label>Name</label>
-            <input type="text" name="AltLCON_Name">
+            <input type="text" name="AltLCON_Name" data-contact="alt-lcon" data-field="name">
           </div>
           <div class="field">
             <label>Email</label>
-            <input type="email" name="AltLCON_Email">
+            <input type="email" name="AltLCON_Email" data-contact="alt-lcon" data-field="email">
           </div>
           <div class="field" id="field-alt-lcon-phone">
             <label>Phone <span style="color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">(must differ from LCON)</span></label>
-            <input type="tel" name="AltLCON_Phone" id="alt-lcon-phone" placeholder="555-555-5555">
+            <input type="tel" name="AltLCON_Phone" id="alt-lcon-phone" data-contact="alt-lcon" data-field="phone" placeholder="555-555-5555">
             <span class="field-error">Must be different from the Location Contact phone.</span>
           </div>
         </div>
@@ -679,49 +747,61 @@
       <!-- Technical Contact -->
       <div class="contact-card">
         <div class="card-label">Technical Contact</div>
+        <div class="copy-from-wrap">
+          <label>Copy from</label>
+          <select class="copy-from-select" onchange="copyContact(this,'tech')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
         <div class="grid cols-3">
           <div class="field">
             <label>Name<span class="req">*</span></label>
-            <input type="text" name="Tech_Name" required>
+            <input type="text" name="Tech_Name" data-contact="tech" data-field="name" required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Email<span class="req">*</span></label>
-            <input type="email" name="Tech_Email" required>
+            <input type="email" name="Tech_Email" data-contact="tech" data-field="email" required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="Tech_Phone" placeholder="555-555-5555" required>
+            <input type="tel" name="Tech_Phone" data-contact="tech" data-field="phone" placeholder="555-555-5555" required>
             <span class="field-error">Required.</span>
           </div>
         </div>
       </div>
 
       <!-- Router Ship-to Contact -->
-      <div class="contact-card">
+      <div class="contact-card router-section" id="shipto-contact-card">
         <div class="card-label">Router Ship-to Contact</div>
+        <div class="copy-from-wrap">
+          <label>Copy from</label>
+          <select class="copy-from-select" onchange="copyContact(this,'shipto')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
         <div class="grid cols-3">
           <div class="field">
             <label>Name<span class="req">*</span></label>
-            <input type="text" name="ShipTo_Name" required>
+            <input type="text" name="ShipTo_Name" data-contact="shipto" data-field="name" data-router-required required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Email<span class="req">*</span></label>
-            <input type="email" name="ShipTo_Email" required>
+            <input type="email" name="ShipTo_Email" data-contact="shipto" data-field="email" data-router-required required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="ShipTo_Phone" placeholder="555-555-5555" required>
+            <input type="tel" name="ShipTo_Phone" data-contact="shipto" data-field="phone" data-router-required placeholder="555-555-5555" required>
             <span class="field-error">Required.</span>
           </div>
         </div>
       </div>
 
       <!-- Router Ship-to Address -->
-      <div class="contact-card">
+      <div class="contact-card router-section" id="shipto-address-card">
         <div class="card-label">Router Ship-to Address <span class="optional-badge">if different from service address</span></div>
         <div class="grid cols-addr">
           <div class="field col-span-2"><label>Address Line 1</label><input type="text" name="ShipTo_Addr1"></div>
@@ -737,20 +817,26 @@
       <!-- Billing Contact -->
       <div class="contact-card">
         <div class="card-label">Billing Contact</div>
+        <div class="copy-from-wrap">
+          <label>Copy from</label>
+          <select class="copy-from-select" onchange="copyContact(this,'billing')">
+            <option value="">— select a contact to copy —</option>
+          </select>
+        </div>
         <div class="grid cols-3">
           <div class="field">
             <label>Name<span class="req">*</span></label>
-            <input type="text" name="Billing_Name" required>
+            <input type="text" name="Billing_Name" data-contact="billing" data-field="name" required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Email<span class="req">*</span></label>
-            <input type="email" name="Billing_Email" required>
+            <input type="email" name="Billing_Email" data-contact="billing" data-field="email" required>
             <span class="field-error">Required.</span>
           </div>
           <div class="field">
             <label>Phone<span class="req">*</span></label>
-            <input type="tel" name="Billing_Phone" placeholder="555-555-5555" required>
+            <input type="tel" name="Billing_Phone" data-contact="billing" data-field="phone" placeholder="555-555-5555" required>
             <span class="field-error">Required.</span>
           </div>
         </div>
@@ -826,7 +912,6 @@ function applyParams() {
     if (el && val) el.value = val;
   }
 
-  // Customer logo — looks in /logos/ folder on the same site
   const logoFile     = params.get('customerlogo') || '';
   const customerName = params.get('customername') || '';
 
@@ -851,6 +936,116 @@ function applyParams() {
   }
 }
 applyParams();
+
+// ── Router show/hide ──
+function updateRouterSections() {
+  const routerVal = document.getElementById('hf-router').value.trim().toLowerCase();
+  const isNo = routerVal === 'no';
+  document.querySelectorAll('.router-section').forEach(el => {
+    el.classList.toggle('router-hidden', isNo);
+  });
+  // Enable/disable required on ship-to fields so they don't block submission when hidden
+  document.querySelectorAll('[data-router-required]').forEach(el => {
+    el.required = !isNo;
+  });
+}
+updateRouterSections();
+
+// ── Copy-from system ──
+// Define all contacts in order, with their display label and field name prefixes
+const CONTACTS = [
+  { key: 'main',     label: 'Main Order Contact',        nameField: '[name="MainContact_Name"]',  emailField: '[name="MainContact_Email"]',  phoneField: '#main-phone' },
+  { key: 'alt-main', label: 'Alternate Order Contact',   nameField: '[data-contact="alt-main"][data-field="name"]', emailField: '[data-contact="alt-main"][data-field="email"]', phoneField: '[data-contact="alt-main"][data-field="phone"]' },
+  { key: 'lcon',     label: 'Location Contact (LCON)',   nameField: '[data-contact="lcon"][data-field="name"]',     emailField: '[data-contact="lcon"][data-field="email"]',     phoneField: '#lcon-phone' },
+  { key: 'alt-lcon', label: 'Alternate Location Contact',nameField: '[data-contact="alt-lcon"][data-field="name"]', emailField: '[data-contact="alt-lcon"][data-field="email"]', phoneField: '[data-contact="alt-lcon"][data-field="phone"]' },
+  { key: 'tech',     label: 'Technical Contact',         nameField: '[data-contact="tech"][data-field="name"]',     emailField: '[data-contact="tech"][data-field="email"]',     phoneField: '[data-contact="tech"][data-field="phone"]' },
+  { key: 'shipto',   label: 'Router Ship-to Contact',    nameField: '[data-contact="shipto"][data-field="name"]',   emailField: '[data-contact="shipto"][data-field="email"]',   phoneField: '[data-contact="shipto"][data-field="phone"]' },
+  { key: 'billing',  label: 'Billing Contact',           nameField: '[data-contact="billing"][data-field="name"]',  emailField: '[data-contact="billing"][data-field="email"]',  phoneField: '[data-contact="billing"][data-field="phone"]' },
+];
+
+// Get current values for a contact by key
+function getContactData(key) {
+  const def = CONTACTS.find(c => c.key === key);
+  if (!def) return null;
+  const nameEl  = document.querySelector(def.nameField);
+  const emailEl = document.querySelector(def.emailField);
+  const phoneEl = document.querySelector(def.phoneField);
+  return {
+    name:  nameEl  ? nameEl.value.trim()  : '',
+    email: emailEl ? emailEl.value.trim() : '',
+    phone: phoneEl ? phoneEl.value.trim() : '',
+  };
+}
+
+// Rebuild all copy-from dropdowns — called whenever any contact field changes
+function refreshCopyDropdowns() {
+  document.querySelectorAll('.copy-from-select').forEach(select => {
+    const targetKey  = select.getAttribute('onchange').match(/'([^']+)'\)/)[1];
+    const targetIdx  = CONTACTS.findIndex(c => c.key === targetKey);
+    const excludeKey = select.dataset.exclude || null;
+
+    // Remember current selection
+    const currentVal = select.value;
+
+    // Rebuild options — only contacts ABOVE this one that have a name,
+    // and not matching the exclude key
+    select.innerHTML = '<option value="">— select a contact to copy —</option>';
+    for (let i = 0; i < targetIdx; i++) {
+      const c = CONTACTS[i];
+      if (c.key === excludeKey) continue;
+      const data = getContactData(c.key);
+      if (data && data.name) {
+        const opt = document.createElement('option');
+        opt.value = c.key;
+        opt.textContent = c.label + ' (' + data.name + ')';
+        select.appendChild(opt);
+      }
+    }
+
+    // Restore selection if still valid
+    if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) {
+      select.value = currentVal;
+    }
+  });
+}
+
+// Copy data from source contact into target contact fields
+function copyContact(selectEl, targetKey) {
+  const sourceKey = selectEl.value;
+  if (!sourceKey) return;
+
+  const sourceData = getContactData(sourceKey);
+  if (!sourceData) return;
+
+  const targetDef = CONTACTS.find(c => c.key === targetKey);
+  if (!targetDef) return;
+
+  const nameEl  = document.querySelector(targetDef.nameField);
+  const emailEl = document.querySelector(targetDef.emailField);
+  const phoneEl = document.querySelector(targetDef.phoneField);
+
+  if (nameEl)  { nameEl.value  = sourceData.name;  nameEl.dispatchEvent(new Event('input'));  }
+  if (emailEl) { emailEl.value = sourceData.email; emailEl.dispatchEvent(new Event('input')); }
+  if (phoneEl) { phoneEl.value = sourceData.phone; phoneEl.dispatchEvent(new Event('input')); }
+
+  // Reset dropdown back to placeholder after copying
+  selectEl.value = '';
+
+  // Re-run phone uniqueness checks in case copied phone matches
+  checkAltMainPhone();
+  checkAltLconPhone();
+}
+
+// Attach listeners to all contact name/email/phone fields to refresh dropdowns on change
+CONTACTS.forEach(c => {
+  [c.nameField, c.emailField, c.phoneField].forEach(selector => {
+    const el = document.querySelector(selector);
+    if (el) el.addEventListener('input', refreshCopyDropdowns);
+  });
+});
+
+// Initial build
+refreshCopyDropdowns();
 
 // ── Duplicate phone checks ──
 function checkAltMainPhone() {
@@ -914,6 +1109,7 @@ document.getElementById('order-form').addEventListener('submit', async function(
       result.textContent = "✓ Order received. We'll be in touch shortly to confirm next steps.";
       this.reset();
       applyParams();
+      refreshCopyDropdowns();
     } else {
       throw new Error(json.message || 'Submission failed');
     }
