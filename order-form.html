@@ -1131,7 +1131,6 @@
 
     <!-- Extra sites injected here by JS -->
     <div id="extra-sites"></div>
-    <button type="button" class="btn-add-site" onclick="addExtraSite()">+ Add Another Site</button>
 
     <div class="submit-wrap">
       <p class="submit-note">Please review your information on the next screen before submitting.</p>
@@ -1310,22 +1309,100 @@ CONTACTS.forEach(c => {
 refreshCopyDropdowns();
 
 // ── Duplicate phone checks ──
-function checkAltMainPhone() {
+function valuesMatch(a, b) {
+  return a.trim() !== '' && b.trim() !== '' && a.trim().toLowerCase() === b.trim().toLowerCase();
+}
+function checkAltMain() {
+  // Check name, email, and phone each independently
+  let ok = true;
+  // Name
+  const mainName  = document.querySelector('[name="MainContact_Name"]').value;
+  const altName   = document.querySelector('[name="AltContact_Name"]').value;
+  const nameField = document.querySelector('[data-contact="alt-main"][data-field="name"]')?.closest('.field');
+  if (nameField) {
+    const err = nameField.querySelector('.field-error');
+    if (valuesMatch(mainName, altName)) {
+      nameField.classList.add('has-error');
+      if (err) err.textContent = 'Must be a different person from Main Order Contact.';
+      ok = false;
+    } else { nameField.classList.remove('has-error'); }
+  }
+  // Email
+  const mainEmail  = document.querySelector('[name="MainContact_Email"]').value;
+  const altEmail   = document.querySelector('[name="AltContact_Email"]').value;
+  const emailField = document.querySelector('[data-contact="alt-main"][data-field="email"]')?.closest('.field');
+  if (emailField) {
+    const err = emailField.querySelector('.field-error');
+    if (valuesMatch(mainEmail, altEmail)) {
+      emailField.classList.add('has-error');
+      if (err) err.textContent = 'Must be different from Main Order Contact email.';
+      ok = false;
+    } else { emailField.classList.remove('has-error'); }
+  }
+  // Phone
   const field = document.getElementById('field-alt-main-phone');
   const alt   = document.getElementById('alt-main-phone').value;
   const main  = document.getElementById('main-phone').value;
-  if (alt && phonesMatch(alt, main)) { field.classList.add('has-error'); return false; }
-  field.classList.remove('has-error'); return true;
+  if (alt && phonesMatch(alt, main)) { field.classList.add('has-error'); ok = false; }
+  else { field.classList.remove('has-error'); }
+  return ok;
 }
-function checkAltLconPhone() {
+function checkAltLcon() {
+  let ok = true;
+  // Name
+  const lconName  = document.querySelector('[data-contact="lcon"][data-field="name"]').value;
+  const altName   = document.querySelector('[data-contact="alt-lcon"][data-field="name"]').value;
+  const nameField = document.querySelector('[data-contact="alt-lcon"][data-field="name"]')?.closest('.field');
+  if (nameField) {
+    const err = nameField.querySelector('.field-error');
+    if (valuesMatch(lconName, altName)) {
+      nameField.classList.add('has-error');
+      if (err) err.textContent = 'Must be a different person from the LCON.';
+      ok = false;
+    } else { nameField.classList.remove('has-error'); }
+  }
+  // Email
+  const lconEmail  = document.querySelector('[data-contact="lcon"][data-field="email"]').value;
+  const altEmail   = document.querySelector('[data-contact="alt-lcon"][data-field="email"]').value;
+  const emailField = document.querySelector('[data-contact="alt-lcon"][data-field="email"]')?.closest('.field');
+  if (emailField) {
+    const err = emailField.querySelector('.field-error');
+    if (valuesMatch(lconEmail, altEmail)) {
+      emailField.classList.add('has-error');
+      if (err) err.textContent = 'Must be different from the LCON email.';
+      ok = false;
+    } else { emailField.classList.remove('has-error'); }
+  }
+  // Phone
   const field = document.getElementById('field-alt-lcon-phone');
   const alt   = document.getElementById('alt-lcon-phone').value;
   const lcon  = document.getElementById('lcon-phone').value;
-  if (alt && phonesMatch(alt, lcon)) { field.classList.add('has-error'); return false; }
-  field.classList.remove('has-error'); return true;
+  if (alt && phonesMatch(alt, lcon)) { field.classList.add('has-error'); ok = false; }
+  else { field.classList.remove('has-error'); }
+  return ok;
 }
-['alt-main-phone','main-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltMainPhone));
-['alt-lcon-phone','lcon-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltLconPhone));
+// Keep old names as aliases so existing copyContact calls still work
+const checkAltMainPhone = checkAltMain;
+const checkAltLconPhone = checkAltLcon;
+
+// Attach live listeners for Main/AltMain
+['MainContact_Name','MainContact_Email'].forEach(name => {
+  const el = document.querySelector(`[name="${name}"]`);
+  if (el) el.addEventListener('input', checkAltMain);
+});
+['AltContact_Name','AltContact_Email'].forEach(name => {
+  const el = document.querySelector(`[name="${name}"]`);
+  if (el) el.addEventListener('input', checkAltMain);
+});
+['alt-main-phone','main-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltMain));
+
+// Attach live listeners for LCON/AltLCON
+['[data-contact="lcon"][data-field="name"]','[data-contact="lcon"][data-field="email"]',
+ '[data-contact="alt-lcon"][data-field="name"]','[data-contact="alt-lcon"][data-field="email"]'].forEach(sel => {
+  const el = document.querySelector(sel);
+  if (el) el.addEventListener('input', checkAltLcon);
+});
+['alt-lcon-phone','lcon-phone'].forEach(id => document.getElementById(id).addEventListener('input', checkAltLcon));
 
 // ── Required validation ──
 function validateRequired() {
@@ -1570,7 +1647,6 @@ function buildExtraSiteHTML(n, sd) {
   <div class="extra-site-card" id="extra-site-${n}" data-site="${n}">
     <div class="extra-site-header">
       <div class="extra-site-title">Site ${n} Details</div>
-      <button type="button" class="btn-remove-site" onclick="removeExtraSite(${n})">Remove Site</button>
     </div>
 
     <!-- Order Details -->
@@ -1699,6 +1775,11 @@ function addExtraSite(sd) {
   if (lconPhone && altPhone) {
     [lconPhone, altPhone].forEach(el => el.addEventListener('input', () => checkExtraSiteAltLcon(n)));
   }
+  // Name and email uniqueness listeners
+  [`es${n}-lcon-name`, `es${n}-alt-lcon-name`, `es${n}-lcon-email`, `es${n}-alt-lcon-email`].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => checkExtraSiteAltLcon(n));
+  });
   // Required field listeners
   document.querySelectorAll(`#extra-site-${n} [required]`).forEach(el => {
     ['input','change'].forEach(evt => el.addEventListener(evt, () => {
@@ -1728,12 +1809,39 @@ function updateExtraSiteRouter(n) {
 }
 
 function checkExtraSiteAltLcon(n) {
+  let ok = true;
+  // Name
+  const lconName = (document.getElementById(`es${n}-lcon-name`)     || {}).value || '';
+  const altName  = (document.getElementById(`es${n}-alt-lcon-name`) || {}).value || '';
+  const nameField = document.getElementById(`es${n}-alt-lcon-name`)?.closest('.field');
+  if (nameField) {
+    const err = nameField.querySelector('.field-error');
+    if (valuesMatch(lconName, altName)) {
+      nameField.classList.add('has-error');
+      if (err) err.textContent = 'Must be a different person from the LCON.';
+      ok = false;
+    } else { nameField.classList.remove('has-error'); }
+  }
+  // Email
+  const lconEmail = (document.getElementById(`es${n}-lcon-email`)     || {}).value || '';
+  const altEmail  = (document.getElementById(`es${n}-alt-lcon-email`) || {}).value || '';
+  const emailField = document.getElementById(`es${n}-alt-lcon-email`)?.closest('.field');
+  if (emailField) {
+    const err = emailField.querySelector('.field-error');
+    if (valuesMatch(lconEmail, altEmail)) {
+      emailField.classList.add('has-error');
+      if (err) err.textContent = 'Must be different from the LCON email.';
+      ok = false;
+    } else { emailField.classList.remove('has-error'); }
+  }
+  // Phone
   const field    = document.getElementById(`es${n}-field-alt-lcon-phone`);
   const lconVal  = (document.getElementById(`es${n}-lcon-phone`)     || {}).value || '';
   const altVal   = (document.getElementById(`es${n}-alt-lcon-phone`) || {}).value || '';
-  if (!field) return true;
-  if (altVal && phonesMatch(altVal, lconVal)) { field.classList.add('has-error'); return false; }
-  field.classList.remove('has-error'); return true;
+  if (!field) return ok;
+  if (altVal && phonesMatch(altVal, lconVal)) { field.classList.add('has-error'); ok = false; }
+  else { field.classList.remove('has-error'); }
+  return ok;
 }
 
 // Populate copy-from dropdowns inside an extra site card
@@ -1851,9 +1959,15 @@ function hideConfirm() {
 // Review button click
 document.getElementById('btn-review').addEventListener('click', function() {
   const reqOk     = validateRequired();
-  const altMainOk = checkAltMainPhone();
-  const altLconOk = checkAltLconPhone();
-  if (!reqOk || !altMainOk || !altLconOk) {
+  const altMainOk = checkAltMain();
+  const altLconOk = checkAltLcon();
+  // Check all extra sites
+  let extraSitesOk = true;
+  document.querySelectorAll('.extra-site-card').forEach(card => {
+    const n = parseInt(card.dataset.site);
+    if (!checkExtraSiteAltLcon(n)) extraSitesOk = false;
+  });
+  if (!reqOk || !altMainOk || !altLconOk || !extraSitesOk) {
     const r = document.getElementById('form-result');
     r.className = 'error';
     r.textContent = 'Please fix the highlighted fields before reviewing.';
