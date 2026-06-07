@@ -769,6 +769,11 @@
           <input type="email" name="SignerEmail" id="inp-signer-email" placeholder="signer@company.com" required>
           <span class="field-error">Required.</span>
         </div>
+        <div class="field col-span-2">
+          <label>Signer Phone<span class="req">*</span></label>
+          <input type="tel" name="SignerPhone" id="inp-signer-phone" placeholder="555-555-5555" required>
+          <span class="field-error">Required.</span>
+        </div>
       </div>
     </div>
 
@@ -1104,6 +1109,7 @@ const editableMap = {
   signer:      'inp-signer',
   title:       'inp-title',
   signeremail: 'inp-signer-email',
+  signerphone: 'inp-signer-phone',
 };
 
 function applyParams() {
@@ -1330,6 +1336,7 @@ function buildSummary() {
     ['Signer Name',           v('[name="SignerName"]')],
     ['Signer Title',          v('[name="SignerTitle"]')],
     ['Signer Email',          v('[name="SignerEmail"]')],
+    ['Signer Phone',          v('[name="SignerPhone"]')],
   ]);
 
   // 03 Service address
