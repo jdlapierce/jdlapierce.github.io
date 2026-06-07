@@ -1569,7 +1569,7 @@ function buildExtraSiteHTML(n, sd) {
   return `
   <div class="extra-site-card" id="extra-site-${n}" data-site="${n}">
     <div class="extra-site-header">
-      <div class="extra-site-title">Site ${n}</div>
+      <div class="extra-site-title">Site ${n} Details</div>
       <button type="button" class="btn-remove-site" onclick="removeExtraSite(${n})">Remove Site</button>
     </div>
 
@@ -1824,6 +1824,12 @@ function copyToExtraSiteLcon(sel, prefix, target) {
   }
 })();
 
+// Refresh extra site copy dropdowns whenever any field on the form changes
+document.getElementById('order-form').addEventListener('input', () => {
+  document.querySelectorAll('.extra-site-card').forEach(card => {
+    refreshExtraSiteCopyDropdowns(parseInt(card.dataset.site));
+  });
+});
 
 function showConfirm() {
   document.getElementById('confirm-content').innerHTML = buildSummary();
