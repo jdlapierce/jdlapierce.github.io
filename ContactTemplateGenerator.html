@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Link Generator — Cirrux Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--blue:#00AEEF;--blue-dk:#0096d6;--ice:#e8f7fd;--white:#fff;--gray:#f4f8fb;--muted:#6b7899;--border:#dde8f0;--text:#1a2340;--green-bd:#7ddaa8;--radius:10px;--display:'Syne',sans-serif;--body:'DM Sans',sans-serif;}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--text);background:var(--gray);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;padding-bottom:80px;}
+  a{text-decoration:none;color:inherit} img{display:block;max-width:100%}
+
+  nav{background:#fff;border-bottom:1px solid #dde3f0;box-shadow:0 2px 12px rgba(0,0,0,0.08);height:150px;display:flex;align-items:center;}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;width:100%;}
+  .nav-logo img{height:195px;width:auto;display:block;}
+  .nav-badge{background:var(--navy);color:#fff;font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:0.06em;padding:6px 14px;border-radius:6px;text-transform:uppercase;}
+
+  .page-wrap{max-width:1100px;margin:0 auto;padding:40px 28px 0;}
+  .page-intro{margin-bottom:32px;}
+  .page-intro h1{font-family:var(--display);font-size:24px;font-weight:800;color:var(--navy);letter-spacing:-0.02em;margin-bottom:6px;}
+  .page-intro p{font-size:14px;color:var(--muted);max-width:580px;}
+
+  .layout{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start;}
+  @media(max-width:860px){.layout{grid-template-columns:1fr;}}
+
+  .card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+  .card-title{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+  .card-title::before{content:'';width:20px;height:2px;background:var(--blue);border-radius:2px;flex-shrink:0;}
+
+  /* Site cards */
+  .site-card{background:var(--gray);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;}
+  .site-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+  .site-card-title{font-family:var(--display);font-size:12px;font-weight:700;color:var(--navy);letter-spacing:0.06em;text-transform:uppercase;}
+  .site-subsection{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+  .site-subsection-label{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+  .btn-remove-site{background:none;border:1.5px solid #fca5a5;color:#dc2626;padding:4px 12px;border-radius:6px;font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;transition:background 0.15s;}
+  .btn-remove-site:hover{background:#fef2f2;}
+  .btn-add-site{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--ice);border:1.5px dashed rgba(0,174,239,0.4);color:var(--blue-dk);padding:11px 20px;border-radius:8px;font-family:var(--display);font-size:13px;font-weight:700;cursor:pointer;transition:background 0.15s,border-color 0.15s;width:100%;margin-top:4px;}
+  .btn-add-site:hover{background:#d4f0fb;border-color:var(--blue);}
+
+  .grid{display:grid;gap:12px;}
+  .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;}
+  .col-span-2{grid-column:span 2;} .col-span-3{grid-column:span 3;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  label{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);}
+  label .opt{font-weight:400;font-size:10px;color:#b0bdd4;text-transform:none;letter-spacing:0;margin-left:4px;}
+  input[type="text"],select{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--body);font-size:14px;padding:10px 13px;outline:none;transition:border-color 0.15s,box-shadow 0.15s;-webkit-appearance:none;}
+  input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,174,239,0.12);}
+  input::placeholder{color:#b0bdd4;}
+  select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;}
+  .input-prefix-wrap{display:flex;align-items:stretch;}
+  .input-prefix{background:var(--gray);border:1.5px solid var(--border);border-right:none;border-radius:8px 0 0 8px;padding:10px 12px;font-size:14px;color:var(--muted);display:flex;align-items:center;flex-shrink:0;}
+  .input-prefix-wrap input{border-radius:0 8px 8px 0;}
+
+  /* Output panel */
+  .output-panel{position:sticky;top:28px;}
+  .output-card{background:var(--navy);border-radius:var(--radius);padding:24px;margin-bottom:16px;}
+  .output-card-title{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:14px;}
+  .preview-block{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:14px 16px;margin-bottom:14px;}
+  .preview-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .preview-row:last-child{border-bottom:none;}
+  .preview-key{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.35);flex-shrink:0;}
+  .preview-val{font-size:13px;color:rgba(255,255,255,0.85);text-align:right;word-break:break-all;}
+  .preview-val.empty{color:rgba(255,255,255,0.2);font-style:italic;}
+  .url-box{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px 14px;font-family:'DM Sans',monospace;font-size:11px;color:rgba(255,255,255,0.5);word-break:break-all;line-height:1.7;margin-bottom:14px;min-height:52px;}
+  .url-box .url-base{color:rgba(255,255,255,0.8);} .url-box .url-param-key{color:#7dd4f5;} .url-box .url-param-val{color:#a5f3c8;} .url-box .url-sep{color:rgba(255,255,255,0.3);}
+  .btn-row{display:flex;gap:10px;}
+  .btn{flex:1;padding:12px 16px;border-radius:8px;font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:0.03em;cursor:pointer;border:none;transition:background 0.15s,transform 0.1s;text-align:center;}
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(0,174,239,0.35);}
+  .btn-primary:hover{background:var(--blue-dk);}
+  .btn-secondary{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.12);}
+  .btn-secondary:hover{background:rgba(255,255,255,0.13);}
+  .copy-feedback{text-align:center;font-size:12px;color:var(--green-bd);margin-top:10px;height:18px;transition:opacity 0.3s;font-family:var(--display);font-weight:600;letter-spacing:0.04em;}
+  .btn-reset{width:100%;background:var(--gray);border:1.5px solid var(--border);border-radius:8px;padding:11px;font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:0.05em;color:var(--muted);cursor:pointer;text-transform:uppercase;transition:background 0.15s,color 0.15s;margin-top:4px;}
+  .btn-reset:hover{background:#eaecf0;color:var(--navy);}
+  .tip{background:var(--ice);border:1px solid rgba(0,174,239,0.2);border-radius:8px;padding:12px 14px;font-size:12px;color:#1a7aa8;line-height:1.6;margin-top:16px;}
+  .tip strong{font-weight:600;}
+
+  @media(max-width:640px){.cols-2,.cols-3{grid-template-columns:1fr;}.col-span-2,.col-span-3{grid-column:span 1;}.nav-logo img{height:120px;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="https://www.cirruxnet.com" class="nav-logo"><img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks"></a>
+    <span class="nav-badge">Internal Use Only</span>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-intro">
+    <h1>Order Link Generator</h1>
+    <p>Fill in the details below and copy the generated link to send to your customer. Each site gets its own order details, address, and location contacts.</p>
+  </div>
+
+  <div class="layout">
+    <div class="left-col">
+
+      <!-- Customer -->
+      <div class="card">
+        <div class="card-title">Customer</div>
+        <div class="grid cols-2">
+          <div class="field col-span-2"><label>Customer / Company Name</label><input type="text" id="f-customername" placeholder="Acme Corporation" oninput="update()"></div>
+          <div class="field col-span-2"><label>Customer Logo Filename <span class="opt">— file in your /logos/ folder</span></label><input type="text" id="f-customerlogo" placeholder="acme.png" oninput="update()"></div>
+        </div>
+      </div>
+
+      <!-- Contract Details -->
+      <div class="card">
+        <div class="card-title">Contract Details <span style="font-family:var(--body);font-weight:400;font-size:11px;text-transform:none;letter-spacing:0;color:var(--muted);margin-left:4px;">— all optional pre-fills</span></div>
+        <div class="grid cols-2">
+          <div class="field col-span-2"><label>Official Company Name <span class="opt">optional</span></label><input type="text" id="f-company" placeholder="Full legal entity name" oninput="update()"></div>
+          <div class="field"><label>Signer Name <span class="opt">optional</span></label><input type="text" id="f-signer" placeholder="Full name" oninput="update()"></div>
+          <div class="field"><label>Signer Title <span class="opt">optional</span></label><input type="text" id="f-title" placeholder="e.g. VP of IT" oninput="update()"></div>
+          <div class="field"><label>Signer Email <span class="opt">optional</span></label><input type="text" id="f-signeremail" placeholder="signer@company.com" oninput="update()"></div>
+          <div class="field"><label>Signer Phone <span class="opt">optional</span></label><input type="text" id="f-signerphone" placeholder="555-555-5555" oninput="update()"></div>
+        </div>
+      </div>
+
+      <!-- Sites -->
+      <div class="card">
+        <div class="card-title">Service Sites &amp; Order Details</div>
+        <div id="gen-sites-container"></div>
+        <button type="button" class="btn-add-site" onclick="addGenSite()">+ Add Another Site</button>
+      </div>
+
+      <button class="btn-reset" onclick="resetAll()">↺ Clear All Fields</button>
+
+    </div>
+
+    <!-- Output -->
+    <div class="output-panel">
+      <div class="output-card">
+        <div class="output-card-title">Live Preview</div>
+        <div class="preview-block">
+          <div class="preview-row"><span class="preview-key">Customer</span><span class="preview-val empty" id="pv-customer">—</span></div>
+          <div class="preview-row"><span class="preview-key">Sites</span><span class="preview-val empty" id="pv-sites">—</span></div>
+        </div>
+        <div class="output-card-title" style="margin-top:4px;">Generated Link</div>
+        <div class="url-box" id="url-display"><span style="color:rgba(255,255,255,0.25);font-style:italic;">Fill in the fields to generate a link…</span></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="copyLink()">Copy Link</button>
+          <button class="btn btn-secondary" onclick="openLink()">Preview ↗</button>
+        </div>
+        <div class="copy-feedback" id="copy-feedback"></div>
+      </div>
+      <div class="tip">
+        <strong>Per-site order details:</strong> Each site has its own product, router, speed, MRC, and address. Contract details are shared across all sites. Contacts like Main, Technical, and Billing are filled in by the customer and apply to all sites.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const BASE_URL='https://www.cirruxnet.com/order-form.html';
+
+// ── Access token gate ──
+(function checkToken() {
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('token') === 'cx-admin-gen') return;
+  document.querySelector('nav').style.display = 'none';
+  document.querySelector('.page-wrap').style.display = 'none';
+  document.body.style.background = '#f4f8fb';
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
+      <div style="background:#fff;border:1.5px solid #dde8f0;border-radius:14px;padding:48px 40px;max-width:480px;text-align:center;box-shadow:0 4px 24px rgba(0,174,239,0.10);">
+        <img src="https://www.cirruxnet.com/cirrux-logo.png" alt="Cirrux Networks" style="height:80px;width:auto;margin:0 auto 28px;">
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#0a1628;letter-spacing:-0.02em;margin-bottom:12px;">Access Restricted</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:14px;color:#6b7899;line-height:1.7;">This page is for internal use only.</p>
+      </div>
+    </div>
+  `);
+})();
+let genSiteCount=0;
+
+const SHARED_PARAMS=[
+  ['f-customername','customername'],['f-customerlogo','customerlogo'],
+  ['f-company','company'],['f-signer','signer'],['f-title','title'],
+  ['f-signeremail','signeremail'],['f-signerphone','signerphone'],
+];
+
+function gv(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+
+function buildGenSiteBlock(n){
+  return `<div class="site-card" id="gen-site-${n}" data-site="${n}">
+    <div class="site-card-header">
+      <div class="site-card-title">Site ${n}</div>
+      ${n>1?`<button type="button" class="btn-remove-site" onclick="removeGenSite(${n})">Remove</button>`:''}
+    </div>
+
+    <div class="site-subsection" style="margin-top:0;padding-top:0;border-top:none;">
+      <div class="site-subsection-label">Order Details</div>
+      <div class="grid cols-2">
+        <div class="field">
+          <label>Product</label>
+          <select id="gs${n}-product" onchange="update()">
+            <option value="">— Select —</option>
+            <option value="DIA">DIA (Dedicated Internet Access)</option>
+            <option value="MPLS">MPLS</option>
+            <option value="Ethernet">Ethernet</option>
+            <option value="SD-WAN">SD-WAN</option>
+            <option value="Broadband">Broadband</option>
+            <option value="Point-to-Point">Point-to-Point</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Router Included</label>
+          <select id="gs${n}-router" onchange="update()">
+            <option value="">— Select —</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Speed</label>
+          <input type="text" id="gs${n}-speed" placeholder="e.g. 1Gbps" oninput="update()">
+        </div>
+        <div class="field">
+          <label>MRC</label>
+          <div class="input-prefix-wrap">
+            <span class="input-prefix">$</span>
+            <input type="text" id="gs${n}-mrc" placeholder="1,500.00" oninput="update()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-subsection">
+      <div class="site-subsection-label">Service Address</div>
+      <div class="grid cols-2">
+        <div class="field col-span-2"><label>Site Name <span class="opt">optional</span></label><input type="text" id="gs${n}-name" placeholder="e.g. Houston HQ" oninput="update()"></div>
+        <div class="field col-span-2"><label>Street Address</label><input type="text" id="gs${n}-addr" placeholder="123 Main St" oninput="update()"></div>
+        <div class="field"><label>Suite <span class="opt">optional</span></label><input type="text" id="gs${n}-suite" placeholder="Ste 400" oninput="update()"></div>
+        <div class="field"><label>Floor <span class="opt">optional</span></label><input type="text" id="gs${n}-floor" placeholder="3" oninput="update()"></div>
+        <div class="field"><label>City</label><input type="text" id="gs${n}-city" placeholder="Houston" oninput="update()"></div>
+        <div class="field"><label>State</label><input type="text" id="gs${n}-state" placeholder="TX" maxlength="2" oninput="update()"></div>
+        <div class="field col-span-2"><label>ZIP</label><input type="text" id="gs${n}-zip" placeholder="77002" oninput="update()"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function addGenSite(){
+  genSiteCount++;
+  document.getElementById('gen-sites-container').insertAdjacentHTML('beforeend',buildGenSiteBlock(genSiteCount));
+  updateRemoveBtns();update();
+}
+function removeGenSite(n){const el=document.getElementById(`gen-site-${n}`);if(el)el.remove();updateRemoveBtns();update();}
+function updateRemoveBtns(){
+  const blocks=document.querySelectorAll('.site-card');
+  blocks.forEach(bl=>{const btn=bl.querySelector('.btn-remove-site');if(btn)btn.style.display=blocks.length>1?'':'none';});
+}
+addGenSite(); // start with 1
+
+function buildURL(){
+  const parts=['token=cx-secure-ord'];
+  for(const [fid,pname] of SHARED_PARAMS){const v=gv(fid);if(v)parts.push(`${encodeURIComponent(pname)}=${encodeURIComponent(v)}`);}
+  document.querySelectorAll('.site-card').forEach(bl=>{
+    const n=parseInt(bl.dataset.site);
+    const fields={
+      product:gv(`gs${n}-product`),router:gv(`gs${n}-router`),speed:gv(`gs${n}-speed`),mrc:gv(`gs${n}-mrc`),
+      name:gv(`gs${n}-name`),addr:gv(`gs${n}-addr`),suite:gv(`gs${n}-suite`),floor:gv(`gs${n}-floor`),
+      city:gv(`gs${n}-city`),state:gv(`gs${n}-state`),zip:gv(`gs${n}-zip`),
+    };
+    for(const [k,v] of Object.entries(fields)){if(v)parts.push(`site${n}_${k}=${encodeURIComponent(v)}`);}
+  });
+  return parts.length?BASE_URL+'?'+parts.join('&'):BASE_URL;
+}
+
+function setPreview(id,val,fmt){
+  const el=document.getElementById(id);if(!el)return;
+  if(val){el.textContent=fmt?fmt(val):val;el.classList.remove('empty');}
+  else{el.textContent='—';el.classList.add('empty');}
+}
+
+function update(){
+  const url=buildURL();
+  setPreview('pv-customer',gv('f-customername'));
+  const blocks=document.querySelectorAll('.site-card');
+  const filled=[...blocks].filter(bl=>{const n=parseInt(bl.dataset.site);return gv(`gs${n}-addr`)||gv(`gs${n}-city`)||gv(`gs${n}-product`);});
+  setPreview('pv-sites',filled.length?`${filled.length} site${filled.length>1?'s':''} configured`:'');
+
+  const urlBox=document.getElementById('url-display');
+  if(url===BASE_URL){urlBox.innerHTML='<span style="color:rgba(255,255,255,0.25);font-style:italic;">Fill in the fields to generate a link…</span>';return;}
+  const qi=url.indexOf('?'),base=url.substring(0,qi+1);
+  const pairs=url.substring(qi+1).split('&').map(p=>{const[k,v]=p.split('=');return `<span class="url-param-key">${k}</span><span class="url-sep">=</span><span class="url-param-val">${v}</span>`;}).join('<span class="url-sep">&</span>');
+  urlBox.innerHTML=`<span class="url-base">${base}</span>${pairs}`;
+}
+
+function copyLink(){
+  const url=buildURL();
+  if(url===BASE_URL){showFeedback('Fill in the fields first.','#fca5a5');return;}
+  navigator.clipboard.writeText(url).then(()=>showFeedback('✓ Link copied to clipboard!','#7ddaa8')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=url;ta.style.cssText='position:fixed;opacity:0;';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    showFeedback('✓ Link copied!','#7ddaa8');
+  });
+}
+function openLink(){const url=buildURL();if(url===BASE_URL){showFeedback('Fill in some fields first.','#fca5a5');return;}window.open(url,'_blank');}
+function showFeedback(msg,color){const el=document.getElementById('copy-feedback');el.textContent=msg;el.style.color=color;el.style.opacity='1';setTimeout(()=>{el.style.opacity='0';},2800);}
+function resetAll(){
+  SHARED_PARAMS.forEach(([id])=>{const e=document.getElementById(id);if(e){if(e.tagName==='SELECT')e.selectedIndex=0;else e.value='';}});
+  document.getElementById('gen-sites-container').innerHTML='';genSiteCount=0;addGenSite();update();
+}
+update();
+</script>
+</body>
+</html>
