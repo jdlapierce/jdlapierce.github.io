@@ -1228,12 +1228,20 @@ const editableMap = {
 };
 
 function applyParams() {
+  // Track which display IDs have already been populated
+  const populated = new Set();
   for (const [key,[dispId,hiddenId]] of Object.entries(lockedMap)) {
     const val = params.get(key) || '';
+    // Skip if this display field was already set by a higher-priority param
+    if (!val && populated.has(dispId)) continue;
     const d = document.getElementById(dispId);
     const h = document.getElementById(hiddenId);
-    if (d) d.value = val || '—';
-    if (h) h.value = val;
+    if (val) {
+      if (d) { d.value = val; populated.add(dispId); }
+      if (h) h.value = val;
+    } else if (!populated.has(dispId)) {
+      if (d) d.value = '—';
+    }
   }
   for (const [key,elId] of Object.entries(editableMap)) {
     const val = params.get(key) || '';
